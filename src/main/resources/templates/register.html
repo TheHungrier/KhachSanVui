@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="bg-background font-body-md text-on-background antialiased">
+<!-- TopNavBar -->
+<header class="w-full sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm font-inter antialiased">
+    <div class="w-full h-20 items-center flex justify-between px-8">
+        <div class="flex items-center h-20">
+            <!-- Left: Brand Logo -->
+            <div class="flex shrink-0 items-center">
+                <a class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white" href="#">KhachSanVui</a>
+            </div>
+
+            <!-- Center: Navigation Links -->
+            <nav class="hidden md:flex items-center gap-6 lg:gap-10 whitespace-nowrap ml-20 flex-1">
+                <a class="dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors uppercase text-sm font-medium text-slate-900"
+                   href="#">TRANG CHỦ</a>
+                <a class="dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors uppercase text-sm font-medium text-slate-900"
+                   href="#">DỊCH VỤ</a>
+                <a class="dark:text-white font-bold border-b-2 dark:border-white pb-1 uppercase text-sm text-indigo-600 border-indigo-600"
+                   href="#">ĐẶT PHÒNG</a>
+                <a class="dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors uppercase text-sm font-medium text-slate-900"
+                   href="#">ƯU ĐÃI</a>
+                <a class="dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors uppercase text-sm font-medium text-slate-900"
+                   href="#">LIÊN HỆ</a>
+            </nav>
+
+            <!-- Right: Action Buttons -->
+            <div class="flex shrink-0 items-center gap-4 ml-auto"><a href="#"
+                                                                     class="text-sm font-medium text-slate-900 dark:text-white hover:text-slate-600 transition-colors uppercase">ĐĂNG
+                NHᄀP</a>
+                <button class="px-6 py-2.5 bg-black text-white text-sm font-bold rounded-lg active:scale-95 transition-all duration-150 ease-in-out uppercase">
+                    ĐẶT NGAY
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="max-w-[1280px] mx-auto px-6 py-10">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 mb-8 text-label-sm text-on-primary-container"><a
+            class="hover:text-primary transition-colors" href="#">Trang chủ</a><span
+            class="material-symbols-outlined text-[10px] opacity-40">chevron_right</span><a
+            class="hover:text-primary transition-colors" href="#">Phòng nghỉ</a><span
+            class="material-symbols-outlined text-[10px] opacity-40">chevron_right</span><span
+            class="text-on-surface font-semibold">Sky Ocean Suite</span></nav>
+    <!-- Room Gallery Grid -->
+    <section class="grid grid-cols-4 grid-rows-2 gap-4 h-[600px] mb-12 rounded-xl overflow-hidden">
+        <div class="col-span-2 row-span-2 relative group cursor-pointer overflow-hidden">
+            <img alt="Main suite"
+                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                 data-alt="Luxurious hotel suite with floor-to-ceiling windows overlooking the ocean at sunset with soft warm interior lighting"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDun5k0stSW-6AsVOJsut1kfTtIG1DJK0cDyTIqu_BDHX1pt5Qun0Wzi0cmjdNzDkS_n8Soyb0_3GuFyDUPtU-WW1nIPYyxXuUTF5Snj6UyCL_fxnIqPSf41KHGJt2rLRCvgX5MQ0mxdBUoo0d3Ot33h5r4BLGYA0Y3j-qEt9-bfPx5FjPaWsp8XQL2Yec5uEQbzA11W0gZfGxx8ky92oJ_Ieqm5_NSqQON5UbuYYgNvR6IF7XFevcP2HZ_sVSxCIHEBh7rd4kgcAo">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
+        </div>
+        <div class="col-span-1 row-span-1 overflow-hidden">
+            <img alt="Bathroom" class="w-full h-full object-cover"
+                 data-alt="Modern marble bathroom with deep soaking tub and golden fixtures in soft morning light"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9vu7r_Mx3wVBkZkc35xu9Om0gytBy40DE054GarIIjhCcAWkHGQJU3oY86mVRvwb3PR9R-4tfyMIjOyCQnk-YDfGgggNAiNC5UeAQtIGAyZyK4zfL52epCtCeiVi0K6s1pG6GH9_unPTa17oDLlZOVIfHdyNnIH9gyOm72DJ5lSEi9Y335ZkXrA7EIStqtjxj9mBRSh6PdSRwHOwD-WjbwHAbki_gqrMSY4HD-YYcT6UscX4hMQ1SI5F461ijPkd2-lD6ETmpnc4">
+        </div>
+        <div class="col-span-1 row-span-1 overflow-hidden">
+            <img alt="Bedroom" class="w-full h-full object-cover"
+                 data-alt="Detail of a king-sized bed with plush white linens and architectural headboard in a bright airy room"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYhjFMsUKXogEPQ16iWPID4Jk_cYpPAMa1tfSZJvlDVMeodj3OWA8vdOV-Ei_v94gHsC4r0aL8iMeHaY2ALZO_iFo6TTmeosa1TW1UoZOKQ_n4hLkKr65zprpvpDvzBFew6w7LlTOUM6B8txuEKT_TvFaN39mGC0Nht73FBTkS8lF2I42Y-3q1dtZvymrW4BsUCvNOA_4g2JRDbLPGMbUWKvcWqu9IcQcPPu2q34y74gwI319c6TpP2bl0N4s534qrbQ2S9LkaFIY">
+        </div>
+        <div class="col-span-1 row-span-1 overflow-hidden">
+            <img alt="View" class="w-full h-full object-cover"
+                 data-alt="Panoramic balcony view showing turquoise tropical waters and distant islands under a clear blue sky"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEtGTmAXc6tgGIYw6ah1JpajHxuvlRMtByEzArDZTA6mZPpKJ5vMnj18VwOBnAkW_MjENzhwxiZebq7KvHi_kNGM4z63xKRlOYmnU_AYb1dEupxUWCjE33oWjsENwA1vP8wuVE21rgyQe2-f3iw8cRVH4BiAYiljozYhtKmyhgKVt1EgVOVoT7J_QyQclEAF2gdoZ-5kcmMqaTo30zhhOrnBxCmSlBZBx3lwnY2axoirtukDDcUU32elshqq1TEcEvzNu3cerlwcU">
+        </div>
+        <div class="col-span-1 row-span-1 relative group cursor-pointer overflow-hidden">
+            <img alt="Lounge" class="w-full h-full object-cover"
+                 data-alt="Private lounge area in the suite with designer furniture and minimalist aesthetic"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFbez0oAjruVyeEKlFHKVBcM0PXKbxFl6S6Z626PcQUCgIvPmD8kIkQ1bbCfgTWV9LtqsQSnBoBqgYFI_bUfDsWm9xi9j3Fr4kv4jLNTD272j4QXHz4tVtGdP5oz9_uXKVdROzrQEhSB4QtpNuwg6CKFW0b6bR3t9EbVy0c78qRp9ACCdBcjsyDPNVl584j94SFl7h5VSdIwD4ksIoO6n3D13X_G-eK7s_UNHq2KvuQMzpPuO1Bw-yaf3FZsri24SVcSjX1AdqHyk">
+            <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                <span class="text-white font-bold text-label-sm">+12 Hình ảnh</span>
+            </div>
+        </div>
+    </section>
+    <!-- Content Layout -->
+    <div class="grid grid-cols-12 gap-xl">
+        <!-- Left Column: Room Details -->
+        <div class="col-span-12 lg:col-span-8">
+            <div class="mb-10">
+                <div class="flex items-center gap-3 mb-4"><span
+                        class="px-3 py-1 bg-primary text-white text-[10px] font-bold rounded uppercase tracking-wider">Bán chạy nhất</span>
+                    <div class="flex items-center text-amber-500 bg-amber-50 px-2 py-1 rounded border border-amber-100">
+                        <span class="material-symbols-outlined text-sm"
+                              style="font-variation-settings: &quot;FILL&quot; 1;">star</span><span
+                            class="font-bold text-label-xs ml-1">4.9 (128 Đánh giá)</span></div>
+                </div>
+                <h1 class="font-display text-display text-on-surface font-bold tracking-tight mb-4">Sky Ocean Suite</h1>
+                <!-- Quick Info -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 p-6 bg-surface-container-low rounded-xl border border-outline-variant/30 mb-10">
+                    <div class="flex flex-col gap-1 border-r border-outline-variant/30">
+                        <span class="text-on-primary-container text-label-xs uppercase">Diện tích</span>
+                        <span class="font-headline-md text-on-surface">85 m²</span>
+                    </div>
+                    <div class="flex flex-col gap-1 border-r border-outline-variant/30 px-2 md:px-0 md:pl-4">
+                        <span class="text-on-primary-container text-label-xs uppercase">Hướng nhìn</span>
+                        <span class="font-headline-md text-on-surface">Biển trực diện</span>
+                    </div>
+                    <div class="flex flex-col gap-1 border-r border-outline-variant/30 px-2 md:px-0 md:pl-4">
+                        <span class="text-on-primary-container text-label-xs uppercase">Giường</span>
+                        <span class="font-headline-md text-on-surface">King Size</span>
+                    </div>
+                    <div class="flex flex-col gap-1 px-2 md:px-0 md:pl-4">
+                        <span class="text-on-primary-container text-label-xs uppercase">Khách tối đa</span>
+                        <span class="font-headline-md text-on-surface">2 Người lớn</span>
+                    </div>
+                </div>
+                <!-- Description -->
+                <div class="prose max-w-none mb-12">
+                    <h2 class="font-headline-lg text-headline-lg mb-4">Mô tả phòng</h2>
+                    <p class="text-body-lg text-on-surface-variant leading-relaxed mb-6">
+                        Tọa lạc tại những tầng cao nhất của khách sạn, Sky Ocean Suite mang đến tầm nhìn toàn cảnh vô
+                        tận ra vịnh biển xanh mát. Thiết kế tối giản tinh tế kết hợp cùng vật liệu tự nhiên cao cấp tạo
+                        nên không gian nghỉ dưỡng tĩnh lặng, sang trọng và đầy cảm hứng.
+                    </p>
+                    <p class="text-body-lg text-on-surface-variant leading-relaxed">
+                        Mọi chi tiết trong phòng đều được chăm chút kỹ lưỡng, từ hệ thống chiếu sáng thông minh đến bộ
+                        sưu tập trà và cà phê thượng hạng, đảm bảo mỗi giây phút lưu trú của bạn đều là một trải nghiệm
+                        khó quên.
+                    </p>
+                </div>
+                <!-- Amenities -->
+                <div class="mb-12">
+                    <h2 class="font-headline-lg text-headline-lg mb-6">Tiện nghi phòng</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center group-hover:bg-secondary group-hover:text-white transition-all">
+                                <span class="material-symbols-outlined" data-icon="wifi">wifi</span>
+                            </div>
+                            <span class="font-label-sm text-on-surface">Wi-Fi Tốc độ cao</span>
+                        </div>
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center group-hover:bg-secondary group-hover:text-white transition-all">
+                                <span class="material-symbols-outlined" data-icon="ac_unit">ac_unit</span>
+                            </div>
+                            <span class="font-label-sm text-on-surface">Điều hòa trung tâm</span>
+                        </div>
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center group-hover:bg-secondary group-hover:text-white transition-all">
+                                <span class="material-symbols-outlined" data-icon="tv">tv</span>
+                            </div>
+                            <span class="font-label-sm text-on-surface">Smart TV 65 inch</span>
+                        </div>
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center group-hover:bg-secondary group-hover:text-white transition-all">
+                                <span class="material-symbols-outlined" data-icon="wine_bar">wine_bar</span>
+                            </div>
+                            <span class="font-label-sm text-on-surface">Mini bar &amp; Coffee</span>
+                        </div>
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center group-hover:bg-secondary group-hover:text-white transition-all">
+                                <span class="material-symbols-outlined" data-icon="lock">lock</span>
+                            </div>
+                            <span class="font-label-sm text-on-surface">Két sắt an toàn</span>
+                        </div>
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center group-hover:bg-secondary group-hover:text-white transition-all">
+                                <span class="material-symbols-outlined" data-icon="bathtub">bathtub</span>
+                            </div>
+                            <span class="font-label-sm text-on-surface">Bồn tắm nằm</span>
+                        </div>
+                    </div>
+                    <button class="mt-8 text-secondary font-bold flex items-center gap-2 hover:underline">
+                        Xem tất cả tiện nghi <span class="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+                    </button>
+                </div>
+                <!-- Location & Reviews Split -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-md pt-12 border-t border-outline-variant/30">
+                    <div>
+                        <h2 class="font-headline-lg text-headline-lg mb-6">Vị trí</h2>
+                        <div class="aspect-video bg-surface-dim rounded-xl relative overflow-hidden group">
+                            <img alt="Map"
+                                 class="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 transition-all duration-700"
+                                 data-alt="Clean minimalist map interface showing the coastal location of the hotel with navy pin marker"
+                                 data-location="Danang"
+                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiJzgBExaQl0MchqoBf0iRmEjW88rBOVoKfJSEAutZn56jM_gojYI4Tm_DsE2sGzNUSr3MY5BwhwR32NSxxA64vgKMh89-k6CGXBvdK0SZwO8m7DIDoayy_Xb3d_6zeeh8SJ-oNg5DadMP7j2uogOLx--U2q9Ct-yc9sHuS_r8nR1lzcV4RCyMybHkF5PF9-Eow5j_gQmZv31qBv0Kd7pQ-4kuxAxDTBomILtoPVTdONoPkDfBh3aTw6y1N3KRljbnxS1ux3uwi-k">
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                                    <span class="material-symbols-outlined">location_on</span>
+                                </div>
+                            </div>
+                            <div class="absolute bottom-4 left-4 bg-white/90 p-3 rounded-lg shadow-sm border border-outline-variant/30">
+                                <p class="text-label-xs font-bold text-on-surface">Đà Nẵng, Việt Nam</p>
+                                <p class="text-[10px] text-on-surface-variant">Khu vực biển Mỹ Khê</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="font-headline-lg text-headline-lg mb-6">Đánh giá</h2>
+                        <div class="space-y-6">
+                            <div class="flex gap-4">
+                                <img alt="User" class="w-12 h-12 rounded-full object-cover"
+                                     data-alt="Portrait of a smiling professional man in casual attire"
+                                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQ-a5RAGwDllbS9xO3zXcr8xMbckT1_LnbNHXGoJPdY1HgJrhAMgNbKc8nfFP7pgfW_ghU615qQZO3d7sVFQgTK_TJ1qG969JBrYYDG7fVjR_njzEGsfg3URmSREN6gloTv8VW1N_13QvhUOtPZ2tMzWicrFu9rKW4Pe-6lRY2m_lCSSKGSg15CFSQkvw4yoBR_Zp8JBrqwCC3jZHPICtRG_ylwgtZ6CtsESkldw3xDBy6fcBLFFxJGv0374PpTeuOsdUPUHN6J8Q">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-bold text-on-surface">Minh Trần</span>
+                                        <div class="flex text-secondary text-[10px]">
+                                            <span class="material-symbols-outlined text-xs"
+                                                  style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+                                            <span class="material-symbols-outlined text-xs"
+                                                  style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+                                            <span class="material-symbols-outlined text-xs"
+                                                  style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+                                            <span class="material-symbols-outlined text-xs"
+                                                  style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+                                            <span class="material-symbols-outlined text-xs"
+                                                  style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-body-md text-on-surface-variant">"Trải nghiệm tuyệt vời. View biển từ
+                                        phòng Sky Ocean Suite thực sự rất ấn tượng vào lúc hoàng hôn."</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <img alt="User" class="w-12 h-12 rounded-full object-cover"
+                                     data-alt="Portrait of a young woman with a relaxed expression against a soft outdoor background"
+                                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuA86sh1aw8SzLgQVou01vRHSIzY9yd4CA-NFZIvfE7xykUr3qMQcZ8v373GCuO6vjChdwMlPdT3IvsuYVBYJyd6D0H_HtlKiETguAR8ZW07xnAa_h2CczHMtpktwiFGX30bCuh0NDvHR60W6Nbd9moNMZ295Q49Lwt8QTAjEhiPBFyQmXQ-GTdv_tR-1S4ucYe1lwiNAlwjQQHBhKbbTR8U5AoSZYW554QdeKvFLmU2lsg8crU6NP8av0Y_tbuIXOT3J2xVRdP12X4">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-bold text-on-surface">Lan Nguyễn</span>
+                                        <div class="flex text-secondary text-[10px]">
+                                            <span class="material-symbols-outlined text-xs"
+                                                  style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+                                            <span class="material-symbols-outlined text-xs"
+                                                  style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+                                            <span class="material-symbols-outlined text-xs"
+                                                  style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+                                            <span class="material-symbols-outlined text-xs"
+                                                  style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+                                            <span class="material-symbols-outlined text-xs"
+                                                  style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-body-md text-on-surface-variant">"Phòng sạch sẽ, nhân viên phục vụ
+                                        chu đáo. Bữa sáng rất ngon và đa dạng món."</p>
+                                </div>
+                            </div>
+                            <button class="w-full py-3 border border-outline-variant text-label-sm font-bold rounded-lg hover:bg-surface-container transition-colors">
+                                Xem tất cả 128 đánh giá
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Right Column: Booking Widget -->
+        <div class="col-span-12 lg:col-span-4">
+            <aside class="sticky top-28 bg-white rounded-xl shadow-lg border border-outline-variant/30 p-8">
+                <div class="flex items-baseline gap-2 mb-8">
+                    <span class="text-on-surface font-display text-[32px]">4.500.000₫</span>
+                    <span class="text-on-primary-container text-body-md">/ đêm</span>
+                </div>
+                <div class="space-y-4 mb-8">
+                    <div class="grid grid-cols-2 border border-outline rounded-lg overflow-hidden">
+                        <div class="p-3 border-r border-outline bg-surface-container-low cursor-pointer">
+                            <label class="block text-[10px] uppercase font-bold text-on-primary-container mb-1">Nhận
+                                phòng</label>
+                            <span class="text-label-sm text-on-surface">15 / 10 / 2024</span>
+                        </div>
+                        <div class="p-3 bg-surface-container-low cursor-pointer">
+                            <label class="block text-[10px] uppercase font-bold text-on-primary-container mb-1">Trả
+                                phòng</label>
+                            <span class="text-label-sm text-on-surface">18 / 10 / 2024</span>
+                        </div>
+                    </div>
+                    <div class="p-3 border border-outline rounded-lg bg-surface-container-low cursor-pointer flex justify-between items-center">
+                        <div>
+                            <label class="block text-[10px] uppercase font-bold text-on-primary-container mb-1">Khách</label>
+                            <span class="text-label-sm text-on-surface">2 Người lớn, 0 Trẻ em</span>
+                        </div>
+                        <span class="material-symbols-outlined text-on-primary-container">expand_more</span>
+                    </div>
+                </div>
+                <button class="w-full py-4 bg-primary text-white font-bold rounded-lg hover:bg-slate-800 transition-all active:scale-95 mb-6 shadow-md shadow-primary/20">
+                    Đặt ngay
+                </button>
+                <div class="space-y-3 mb-8">
+                    <div class="flex justify-between text-body-md">
+                        <span class="text-on-surface-variant underline">4.500.000₫ x 3 đêm</span>
+                        <span class="text-on-surface">13.500.000₫</span>
+                    </div>
+                    <div class="flex justify-between text-body-md">
+                        <span class="text-on-surface-variant underline">Phí dịch vụ</span>
+                        <span class="text-on-surface">500.000₫</span>
+                    </div>
+                    <div class="pt-3 border-t border-outline-variant/30 flex justify-between items-center">
+                        <span class="font-bold text-on-surface">Tổng cộng</span>
+                        <span class="font-display text-headline-md text-primary">14.000.000₫</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-4 bg-secondary/5 rounded-lg border border-secondary/20">
+                    <span class="material-symbols-outlined text-secondary">verified_user</span>
+                    <p class="text-label-xs text-secondary leading-tight">Cam kết giá tốt nhất và hoàn tiền 100% nếu có
+                        sai sót trong quá trình đặt phòng.</p>
+                </div>
+            </aside>
+        </div>
+    </div>
+    <!-- Room Suggestions -->
+    <section class="mt-20 pt-16 border-t border-outline-variant/30">
+        <div class="flex items-end justify-between mb-10">
+            <div>
+                <h2 class="font-display text-headline-lg mb-2">Các loại phòng khác</h2>
+                <p class="text-on-primary-container">Khám phá thêm các lựa chọn nghỉ dưỡng đẳng cấp khác tại
+                    KhachSanVui</p>
+            </div>
+            <button class="text-primary font-bold flex items-center gap-2 group">
+                Xem tất cả <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+            </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+            <!-- Suggestion 1 -->
+            <div class="group cursor-pointer">
+                <div class="relative aspect-[4/3] rounded-xl overflow-hidden mb-4 shadow-sm">
+                    <img alt="Deluxe Room"
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                         data-alt="Bright modern deluxe hotel room with city skyline view and contemporary furniture"
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJD6hICLrMPpCIYT0M47h1wsDUQQCuaRqbtlUZtLTNL5Jx9W0_cyhflLyIDw1EnNFBFUfbMKPXeZupT5qRQOo_hS0rbcoyA80866uhJqGFo_l2S5fG-Uoro5YBEBs1tEQQ44FeSuDh6zHo8lvOfp4OOrcPMAEYo_eviExDdaf8NooL5xJYxETOopUpORN2vPBQjqPg4dor_07sc84HQrM-SzVA7-bpPS_4l7HS9gx7zG7A3QPxQhablaCx_7cL-xqsl27ZYLAZJyA">
+                    <div class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-label-xs font-bold shadow-sm">
+                        2.800.000₫
+                    </div>
+                </div>
+                <h3 class="font-headline-md text-on-surface mb-1 group-hover:text-secondary transition-colors">Premium
+                    City View</h3>
+                <div class="flex items-center gap-4 text-on-primary-container text-label-sm">
+                    <span class="flex items-center gap-1"><span
+                            class="material-symbols-outlined text-sm">square_foot</span> 45 m²</span>
+                    <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">bed</span> 1 King bed</span>
+                </div>
+            </div>
+            <!-- Suggestion 2 -->
+            <div class="group cursor-pointer">
+                <div class="relative aspect-[4/3] rounded-xl overflow-hidden mb-4 shadow-sm">
+                    <img alt="Family Suite"
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                         data-alt="Spacious family suite with separate living area and warm atmospheric lighting"
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVJZyR8wnyCYmvikUzM595n9IG_cQylXJm047VKJ6QtcgyccjFnEGYAAkyNd2xOxjRuNMka6wBmRrdbIxK4T4g3TfCSp039yG-yPzexVTjgQvaw9DEIHDC6WFIxnRfC_pYkhMDQiWL95d0ZQ7olwrNN3pwrLjZ1y3d7gJciMIHkrBcZEe0QU7vej6lj6uJypPjc_bgapp9CyiZqya-uvM5B2fDLvF375ixZ2rL0abXmaKG-fZyoM5_6Xv2iR8tWD0Juj3Gy8y2XYA">
+                    <div class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-label-xs font-bold shadow-sm">
+                        5.200.000₫
+                    </div>
+                    <div class="absolute top-4 left-4 bg-secondary text-white px-3 py-1 rounded-full text-label-xs font-bold shadow-sm">
+                        Popular
+                    </div>
+                </div>
+                <h3 class="font-headline-md text-on-surface mb-1 group-hover:text-secondary transition-colors">Family
+                    Ocean Villa</h3>
+                <div class="flex items-center gap-4 text-on-primary-container text-label-sm">
+                    <span class="flex items-center gap-1"><span
+                            class="material-symbols-outlined text-sm">square_foot</span> 120 m²</span>
+                    <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">bed</span> 2 King beds</span>
+                </div>
+            </div>
+            <!-- Suggestion 3 -->
+            <div class="group cursor-pointer">
+                <div class="relative aspect-[4/3] rounded-xl overflow-hidden mb-4 shadow-sm">
+                    <img alt="Royal Suite"
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                         data-alt="Opulent royal suite with dark wood accents, gold details and private balcony"
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL1tqRBg56i_MRZ16bSMVHG1GKjhehze9p7q5b84PaDcRcnEEAJNaT2SJoj00mi9U_7d6HEPrg9KZhRt9zI3G2hUTLCUuR2lHFnVuX89RAq8Dr3ta0LlfPageBtAOExWrfrmB2LJA2ffwem2mEDl1ZgKHqRMrXZak96EnpxotcxHZWkDulQuCQZ3hJ9_lin1VJzW6BcVfGdBGtGx9QutYHOu2d-1qfdFJK4mfb_L_LOP831K3U-SzUUBdL65lHoc8God-SHK_8lB8">
+                    <div class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-label-xs font-bold shadow-sm">
+                        12.000.000₫
+                    </div>
+                </div>
+                <h3 class="font-headline-md text-on-surface mb-1 group-hover:text-secondary transition-colors">Royal
+                    Presidential Suite</h3>
+                <div class="flex items-center gap-4 text-on-primary-container text-label-sm">
+                    <span class="flex items-center gap-1"><span
+                            class="material-symbols-outlined text-sm">square_foot</span> 250 m²</span>
+                    <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">bed</span> 3 King beds</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<!-- Footer -->
+<footer class="w-full pt-16 pb-8 bg-slate-900 dark:bg-black border-t border-slate-800 text-slate-300 dark:text-slate-400 font-inter text-sm tracking-wide">
+    <div class="max-w-[1280px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div class="flex flex-col gap-6">
+            <span class="text-xl font-bold text-white">KhachSanVui</span>
+            <p class="leading-relaxed opacity-80">Trải nghiệm nghỉ dưỡng đẳng cấp 5 sao với dịch vụ tận tâm và không
+                gian tinh tế tại những điểm đến hàng đầu Việt Nam.</p>
+            <div class="flex gap-4">
+                <a class="w-10 h-10 rounded-full border border-slate-700 flex items-center justify-center hover:bg-indigo-600 hover:border-indigo-600 transition-all"
+                   href="#">
+                    <span class="material-symbols-outlined text-lg">social_leaderboard</span>
+                </a>
+                <a class="w-10 h-10 rounded-full border border-slate-700 flex items-center justify-center hover:bg-indigo-600 hover:border-indigo-600 transition-all"
+                   href="#">
+                    <span class="material-symbols-outlined text-lg">public</span>
+                </a>
+                <a class="w-10 h-10 rounded-full border border-slate-700 flex items-center justify-center hover:bg-indigo-600 hover:border-indigo-600 transition-all"
+                   href="#">
+                    <span class="material-symbols-outlined text-lg">camera</span>
+                </a>
+            </div>
+        </div>
+        <div>
+            <h4 class="text-white font-bold mb-6">Liên kết nhanh</h4>
+            <ul class="space-y-4">
+                <li class=""><a class="text-slate-400 hover:text-indigo-400 transition-colors" href="#">Về chúng tôi</a>
+                </li>
+                <li class=""><a class="text-slate-400 hover:text-indigo-400 transition-colors" href="#">Phòng nghỉ</a>
+                </li>
+                <li class=""><a class="text-slate-400 hover:text-indigo-400 transition-colors" href="#">Ưu đãi đặc
+                    biệt</a></li>
+                <li class=""><a class="text-slate-400 hover:text-indigo-400 transition-colors" href="#">Nhà hàng &amp;
+                    Bar</a></li>
+                <li class=""><a class="text-slate-400 hover:text-indigo-400 transition-colors" href="#">Spa &amp;
+                    Wellness</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="text-white font-bold mb-6">Hỗ trợ khách hàng</h4>
+            <ul class="space-y-4">
+                <li class=""><a class="text-slate-400 hover:text-indigo-400 transition-colors" href="#">Trung tâm trợ
+                    giúp</a></li>
+                <li class=""><a class="text-slate-400 hover:text-indigo-400 transition-colors" href="#">Chính sách đặt
+                    phòng</a></li>
+                <li class=""><a class="text-slate-400 hover:text-indigo-400 transition-colors" href="#">Câu hỏi thường
+                    gặp</a></li>
+                <li class=""><a class="text-slate-400 hover:text-indigo-400 transition-colors" href="#">Liên hệ</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="text-white font-bold mb-6">Bản tin</h4>
+            <p class="mb-6 opacity-80">Nhận thông báo về các chương trình ưu đãi mới nhất từ chúng tôi.</p>
+            <div class="relative">
+                <input class="w-full bg-slate-800 border-none rounded-lg py-3 px-4 text-white focus:ring-2 focus:ring-indigo-500"
+                       placeholder="Email của bạn" type="email">
+                <button class="absolute right-2 top-1.5 p-1.5 bg-indigo-600 rounded-md hover:bg-indigo-700">
+                    <span class="material-symbols-outlined text-white">send</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="max-w-[1280px] mx-auto px-6 mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-slate-400">© 2024 KhachSanVui Luxury Travel. All rights reserved.</p>
+        <div class="flex gap-6">
+            <a class="text-slate-400 hover:text-white transition-colors" href="#">Privacy Policy</a>
+            <a class="text-slate-400 hover:text-white transition-colors" href="#">Terms of Service</a>
+            <a class="text-slate-400 hover:text-white transition-colors" href="#">Accessibility</a>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

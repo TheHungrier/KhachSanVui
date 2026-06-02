@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <title layout:title-pattern="$CONTENT_TITLE - KhachSanVui">KhachSanVui</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <th:block layout:fragment="additional-css"></th:block>
+</head>
+
+<body>
+
+<div class="top-ticker">
+    <div class="ticker-track">
+        <span>Ưu đãi đặt phòng hôm nay - tiết kiệm đến 20% cho khách đặt sớm</span>
+        <span>Phòng sạch đẹp, tiện nghi đầy đủ, hỗ trợ đặt phòng nhanh chóng</span>
+        <span>KhachSanVui - trải nghiệm lưu trú thoải mái và đáng tin cậy</span>
+        <span>Dịch vụ khách sạn thân thiện, thanh toán tiện lợi</span>
+    </div>
+</div>
+
+<header class="ksv-header">
+    <div class="ksv-header-inner">
+        <a href="/home" class="ksv-logo">
+            <img th:src="@{/images/logo-full.png}" alt="KhachSanVui">
+        </a>
+
+        <nav class="ksv-nav">
+            <a href="/home">Trang chủ</a>
+            <a href="/phong">Phòng nghỉ</a>
+            <a href="/dat-phong">Đặt phòng</a>
+            <a href="/dich-vu">Dịch vụ</a>
+            <a href="/uu-dai">Ưu đãi</a>
+            <a href="/lien-he">Liên hệ</a>
+        </nav>
+
+        <div class="ksv-header-actions">
+            <a href="/login" class="btn-outline">Đăng nhập</a>
+            <a href="/dat-phong/them" class="btn-accent">Đặt ngay</a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <th:block layout:fragment="content"></th:block>
+</main>
+
+<footer class="ksv-footer">
+    <div class="ksv-footer-inner">
+        <div class="footer-grid">
+            <div class="footer-col footer-brand">
+                <img th:src="@{/images/logo-full.png}" alt="KhachSanVui">
+                <p>Hệ thống quản lý khách sạn hỗ trợ đặt phòng, nhận phòng, dịch vụ, hóa đơn và thanh toán.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Chức năng</h4>
+                <a href="/phong">Quản lý phòng</a>
+                <a href="/dat-phong">Đặt phòng</a>
+                <a href="/dich-vu">Dịch vụ</a>
+                <a href="/hoa-don">Hóa đơn</a>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quản lý</h4>
+                <a href="/khach-hang">Khách hàng</a>
+                <a href="/nhan-vien">Nhân viên</a>
+                <a href="/bao-cao/doanh-thu">Báo cáo</a>
+            </div>
+
+            <div class="footer-col">
+                <h4>Liên hệ</h4>
+                <p>Email: khachsanvui@gmail.com</p>
+                <p>Hotline: 0900 000 000</p>
+                <p>TP. Hồ Chí Minh, Việt Nam</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>© 2026 KhachSanVui. All rights reserved.</span>
+        </div>
+    </div>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+<th:block layout:fragment="additional-scripts"></th:block>
+
+</body>
+</html>

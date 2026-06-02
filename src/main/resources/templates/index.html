@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+
+<head>
+    <title>Trang chủ</title>
+</head>
+
+<body>
+<section layout:fragment="content">
+
+    <!-- HERO -->
+    <section class="hero hero-customer">
+        <div class="hero-inner">
+            <div class="hero-label">KHACHSANVUI HOTEL</div>
+
+            <h1>Tìm chỗ nghỉ phù hợp cho chuyến đi của bạn</h1>
+            <p>Đặt phòng nhanh chóng, lựa chọn phòng tiện nghi và trải nghiệm dịch vụ khách sạn thân thiện.</p>
+
+            <form class="search-box customer-search" action="/phong" method="get">
+                <div class="search-field destination">
+                    <label>Bạn muốn đến đâu?</label>
+                    <input type="text" name="keyword" placeholder="Nhập tên phòng, loại phòng hoặc địa điểm...">
+                </div>
+
+                <div class="search-field">
+                    <label>Ngày nhận phòng</label>
+                    <input type="date" name="ngayNhan">
+                </div>
+
+                <div class="search-field">
+                    <label>Ngày trả phòng</label>
+                    <input type="date" name="ngayTra">
+                </div>
+
+                <div class="search-field">
+                    <label>Số khách</label>
+                    <input type="number" name="soKhach" min="1" value="1">
+                </div>
+
+                <button type="submit" class="btn-search">Tìm phòng</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- SPECIAL OFFER -->
+    <section class="container">
+        <a href="/phong" class="customer-deal">
+            <div>
+                <span class="deal-tag">Ưu đãi hôm nay</span>
+                <h2>Tận hưởng kỳ nghỉ thoải mái với mức giá tốt</h2>
+                <p>Đặt phòng trước để nhận ưu đãi, lựa chọn phòng phù hợp và thanh toán thuận tiện.</p>
+            </div>
+
+            <div class="deal-image">
+                <img th:src="@{/images/deal-hotel.jpg}" alt="Ưu đãi khách sạn">
+            </div>
+        </a>
+    </section>
+
+    <!-- ROOM TYPES -->
+    <section class="container section-block">
+        <div class="section-header">
+            <div>
+                <h2>Loại phòng phổ biến</h2>
+                <p>Chọn nhanh loại phòng phù hợp với nhu cầu lưu trú của bạn.</p>
+            </div>
+            <a href="/phong">Xem tất cả</a>
+        </div>
+
+        <div class="type-grid">
+            <a href="/phong" class="type-card">
+                <img th:src="@{/images/room-single.jpg}" alt="Phòng đơn">
+                <div>
+                    <h3>Phòng đơn</h3>
+                    <p>Gọn gàng, tiện nghi, phù hợp lưu trú ngắn ngày.</p>
+                </div>
+            </a>
+
+            <a href="/phong" class="type-card">
+                <img th:src="@{/images/room-deluxe.jpg}" alt="Phòng đôi">
+                <div>
+                    <h3>Phòng đôi</h3>
+                    <p>Không gian rộng rãi, phù hợp cho hai người.</p>
+                </div>
+            </a>
+
+            <a href="/phong" class="type-card">
+                <img th:src="@{/images/room-family.jpg}" alt="Phòng gia đình">
+                <div>
+                    <h3>Phòng gia đình</h3>
+                    <p>Thoải mái cho gia đình hoặc nhóm khách nhỏ.</p>
+                </div>
+            </a>
+
+            <a href="/phong" class="type-card">
+                <img th:src="@{/images/room-vip.jpg}" alt="Phòng VIP">
+                <div>
+                    <h3>Phòng VIP</h3>
+                    <p>Sang trọng, riêng tư và đầy đủ tiện nghi cao cấp.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- FEATURED ROOMS -->
+    <section class="container section-block">
+        <div class="section-header">
+            <div>
+                <h2>Phòng nổi bật</h2>
+                <p>Bấm vào hình ảnh hoặc thẻ phòng để xem chi tiết và đặt phòng.</p>
+            </div>
+            <a href="/phong">Xem thêm phòng</a>
+        </div>
+
+        <div class="customer-room-grid">
+            <a href="/dat-phong/them" class="customer-room-card">
+                <div class="room-photo">
+                    <img th:src="@{/images/room-standard.jpg}" alt="Phòng Standard">
+                    <span class="badge">Còn phòng</span>
+                </div>
+                <div class="room-body">
+                    <h3>Phòng Standard</h3>
+                    <p>Phòng đơn tiện nghi, phù hợp cho khách lưu trú ngắn ngày.</p>
+                    <div class="room-info-row">
+                        <span>1 giường</span>
+                        <span>2 khách</span>
+                        <span>Wi-Fi</span>
+                    </div>
+                    <strong class="room-price">300.000₫ / đêm</strong>
+                </div>
+            </a>
+
+            <a href="/dat-phong/them" class="customer-room-card">
+                <div class="room-photo">
+                    <img th:src="@{/images/room-deluxe.jpg}" alt="Phòng Deluxe">
+                    <span class="badge">Được chọn nhiều</span>
+                </div>
+                <div class="room-body">
+                    <h3>Phòng Deluxe</h3>
+                    <p>Không gian rộng rãi, phù hợp cho cặp đôi hoặc khách công tác.</p>
+                    <div class="room-info-row">
+                        <span>1 giường lớn</span>
+                        <span>2 khách</span>
+                        <span>Máy lạnh</span>
+                    </div>
+                    <strong class="room-price">500.000₫ / đêm</strong>
+                </div>
+            </a>
+
+            <a href="/dat-phong/them" class="customer-room-card">
+                <div class="room-photo">
+                    <img th:src="@{/images/room-premium.jpg}" alt="Phòng Premium">
+                    <span class="badge">VIP</span>
+                </div>
+                <div class="room-body">
+                    <h3>Phòng Premium</h3>
+                    <p>Thiết kế sang trọng, tiện nghi cao cấp, phù hợp nghỉ dưỡng.</p>
+                    <div class="room-info-row">
+                        <span>View đẹp</span>
+                        <span>2 khách</span>
+                        <span>Bồn tắm</span>
+                    </div>
+                    <strong class="room-price">900.000₫ / đêm</strong>
+                </div>
+            </a>
+
+            <a href="/dat-phong/them" class="customer-room-card">
+                <div class="room-photo">
+                    <img th:src="@{/images/room-family.jpg}" alt="Phòng Family">
+                    <span class="badge">Gia đình</span>
+                </div>
+                <div class="room-body">
+                    <h3>Phòng Family</h3>
+                    <p>Không gian thoải mái, phù hợp gia đình hoặc nhóm khách nhỏ.</p>
+                    <div class="room-info-row">
+                        <span>2 giường</span>
+                        <span>4 khách</span>
+                        <span>Tiện nghi</span>
+                    </div>
+                    <strong class="room-price">750.000₫ / đêm</strong>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- DESTINATIONS -->
+    <section class="container section-block">
+        <div class="section-header">
+            <div>
+                <h2>Điểm đến đáng chú ý</h2>
+                <p>Khám phá các điểm đến phổ biến được nhiều khách hàng quan tâm.</p>
+            </div>
+        </div>
+
+        <div class="destination-grid">
+            <a href="/phong" class="destination-card destination-large">
+                <img th:src="@{/images/destination-hcm.jpg}" alt="TP. Hồ Chí Minh">
+                <div>
+                    <h3>TP. Hồ Chí Minh</h3>
+                    <p>Nhiều lựa chọn lưu trú tiện nghi</p>
+                </div>
+            </a>
+
+            <a href="/phong" class="destination-card destination-large">
+                <img th:src="@{/images/destination-vungtau.jpg}" alt="Vũng Tàu">
+                <div>
+                    <h3>Vũng Tàu</h3>
+                    <p>Không gian nghỉ dưỡng gần biển</p>
+                </div>
+            </a>
+
+            <a href="/phong" class="destination-card">
+                <img th:src="@{/images/destination-hanoi.jpg}" alt="Hà Nội">
+                <div>
+                    <h3>Hà Nội</h3>
+                </div>
+            </a>
+
+            <a href="/phong" class="destination-card">
+                <img th:src="@{/images/destination-danang.jpg}" alt="Đà Nẵng">
+                <div>
+                    <h3>Đà Nẵng</h3>
+                </div>
+            </a>
+
+            <a href="/phong" class="destination-card">
+                <img th:src="@{/images/destination-dalat.jpg}" alt="Đà Lạt">
+                <div>
+                    <h3>Đà Lạt</h3>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="container section-block">
+        <div class="section-header">
+            <div>
+                <h2>Dịch vụ dành cho khách hàng</h2>
+                <p>Những tiện ích giúp kỳ nghỉ của bạn thoải mái hơn.</p>
+            </div>
+            <a href="/dich-vu">Xem dịch vụ</a>
+        </div>
+
+        <div class="service-grid">
+            <a href="/dich-vu" class="service-card">
+                <img th:src="@{/images/service-breakfast.jpg}" alt="Ăn sáng">
+                <h3>Ăn sáng</h3>
+                <p>Phục vụ bữa sáng tiện lợi cho khách lưu trú.</p>
+            </a>
+
+            <a href="/dich-vu" class="service-card">
+                <img th:src="@{/images/service-laundry.jpg}" alt="Giặt ủi">
+                <h3>Giặt ủi</h3>
+                <p>Dịch vụ giặt ủi nhanh chóng, tiện lợi.</p>
+            </a>
+
+            <a href="/dich-vu" class="service-card">
+                <img th:src="@{/images/service-transport.jpg}" alt="Di chuyển">
+                <h3>Hỗ trợ di chuyển</h3>
+                <p>Hỗ trợ đặt xe và tư vấn di chuyển khi cần.</p>
+            </a>
+        </div>
+    </section>
+
+</section>
+</body>
+</html>
