@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title th:text="${formTitle}">Biểu mẫu cấu hình dịch vụ</title>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-form-container">
+        <div class="ksv-form-header">
+            <div class="ksv-form-header-title">
+                <h1 th:text="${formTitle}">Biểu mẫu dịch vụ</h1>
+                <p>Cập nhật đầy đủ thông số định danh thiết lập tên gọi, phân khúc bảng giá niêm yết cho các gói dịch vụ
+                    khách sạn.</p>
+            </div>
+            <a class="ksv-btn-back" th:href="@{/dich-vu/admin}">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+            </a>
+        </div>
+
+        <form th:action="@{/dich-vu/admin/luu}" th:object="${dto}" method="post" enctype="multipart/form-data">
+            <input type="hidden" th:field="*{maDichVu}">
+            <input type="hidden" th:field="*{hinhAnh}">
+
+            <div class="ksv-form-grid">
+                <div class="ksv-form-group">
+                    <label>Tên gọi dịch vụ kinh doanh</label>
+                    <input class="ksv-form-input" th:field="*{tenDichVu}"
+                           placeholder="Nhập tên dịch vụ (Ví dụ: Giặt ủi cấp tốc, Massage trị liệu...)" required
+                           maxlength="100">
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Phân loại nhóm tiện ích</label>
+                    <input class="ksv-form-input" th:field="*{loaiDichVu}"
+                           placeholder="Ví dụ: Ẩm thực, Spa, Di chuyển, Dịch vụ phòng..." maxlength="100">
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Đơn giá niêm yết thu phí (₫)</label>
+                    <input class="ksv-form-input" th:field="*{donGia}" type="number" min="0"
+                           placeholder="Nhập giá bán thực tế..." required>
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Trạng thái phân phối hành chính</label>
+                    <select class="ksv-form-select" th:field="*{trangThai}">
+                        <option value="Đang cung cấp">Đang cung cấp (Sẵn sàng phục vụ)</option>
+                        <option value="Ngừng cung cấp">Ngừng cung cấp (Tạm hoãn kinh doanh)</option>
+                    </select>
+                </div>
+
+                <div class="ksv-form-group full-width">
+                    <label>Tải lên hình ảnh minh họa gói tiện ích</label>
+                    <input type="file" name="fileAnh" id="ksvServiceFile" accept="image/*" class="ksv-form-file">
+                </div>
+
+                <div class="ksv-form-group full-width">
+                    <label>Mô tả thông tin chi tiết dịch vụ</label>
+                    <textarea class="ksv-form-textarea" th:field="*{moTa}" rows="4"
+                              placeholder="Nhập tóm tắt nội dung quy trình bàn giao, thời gian hoạt động hoặc các lưu ý đặc thù về dịch vụ..."
+                              maxlength="500"></textarea>
+                </div>
+            </div>
+
+            <div class="ksv-form-actions">
+                <button class="ksv-btn-save" type="submit">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu trữ thông tin dịch vụ
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>

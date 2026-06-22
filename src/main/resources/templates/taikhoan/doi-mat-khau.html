@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <meta charset="UTF-8">
+    <title>Đổi mật khẩu — KhachSanVui</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <section class="ksv-profile-section">
+        <div class="ksv-profile-wrap">
+
+            <aside class="ksv-profile-sidebar">
+
+                <div class="ksv-profile-card ksv-profile-identity">
+                    <div class="ksv-avatar-wrap" style="cursor: pointer;"
+                         onclick="document.getElementById('avatarInput').click();">
+                        <img th:src="@{/images/avatars/{f}(f=${khachHang.hinhAnh != null ? khachHang.hinhAnh : 'avatar-default.png'})}"
+                             th:alt="${khachHang.hoTen}"
+                             id="avatarPreview"
+                             class="ksv-avatar-img">
+                        <input type="file" id="avatarInput" name="avatarFile" accept="image/*" form="changePasswordForm"
+                               style="display: none;">
+                    </div>
+
+                    <p class="ksv-profile-name" th:text="${khachHang.hoTen}">Nguyễn Anh</p>
+                    <p class="ksv-profile-handle" th:text="${khachHang.email}"
+                       style="color: var(--muted); font-size: 13px;">ducanh@gmail.com</p>
+
+                    <div style="border-top: 1px solid var(--border); margin: 16px 0; width: 100%;"></div>
+
+                    <div style="width: 100%; text-align: left; display: flex; flex-direction: column; gap: 10px; font-size: 13.5px;">
+
+                        <p style="margin: 0; color: var(--muted);">
+                            <i class="fa-solid fa-phone" style="width: 18px; color: var(--blue);"></i>
+                            <span th:text="${khachHang.soDienThoai != null and !khachHang.soDienThoai.isEmpty() ? khachHang.soDienThoai : 'Chưa cập nhật'}">0901 234 567</span>
+                        </p>
+
+                        <p style="margin: 0; color: var(--muted); word-break: break-all;">
+                            <i class="fa-regular fa-envelope" style="width: 18px; color: var(--blue);"></i>
+                            <span th:text="${khachHang.email}">anhnguyen@gmail.com</span>
+                        </p>
+
+                        <p style="margin: 0; color: var(--muted);">
+                            <i class="fa-solid fa-shield-halved" style="width: 18px; color: var(--blue);"></i>
+                            Trạng thái:
+                            <span th:if="${session.USER_LOGIN != null}"
+                                  th:text="${session.USER_LOGIN.trangThai}"
+                                  th:style="${session.USER_LOGIN.trangThai == 'Hoạt động' ? 'color: #28a745; font-weight: 600;' : 'color: #dc3545; font-weight: 600;'}">
+                                Hoạt động
+                            </span>
+                            <span th:if="${session.USER_LOGIN == null}" style="color: #ffc107; font-weight: 600;">Chưa rõ</span>
+                        </p>
+
+                    </div>
+                </div>
+
+                <nav class="ksv-profile-card ksv-profile-nav" aria-label="Điều hướng hồ sơ cá nhân"
+                     style="display: flex; flex-direction: column; gap: 4px;">
+                    <a th:href="@{/tai-khoan/ho-so}"
+                       th:classappend="${#strings.contains(#execInfo.templateName, 'ho-so') ? 'ksv-nav-link--active' : ''}"
+                       class="ksv-nav-link">
+                        <i class="fa-solid fa-user" aria-hidden="true"></i>
+                        Thông tin cá nhân
+                    </a>
+                    <a th:href="@{/tai-khoan/doi-mat-khau}"
+                       th:classappend="${#strings.contains(#execInfo.templateName, 'doi-mat-khau') ? 'ksv-nav-link--active' : ''}"
+                       class="ksv-nav-link">
+                        <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                        Đổi mật khẩu
+                    </a>
+                </nav>
+
+            </aside>
+
+            <main class="ksv-profile-main">
+                <article class="ksv-profile-card ksv-profile-form-card">
+
+                    <header class="ksv-form-head">
+                        <h2>Đổi mật khẩu</h2>
+                        <p>Vui lòng nhập mật khẩu hiện tại và mật khẩu mới để bảo mật tài khoản của bạn.</p>
+                    </header>
+
+                    <form th:action="@{/tai-khoan/doi-mat-khau/thuc-hien}"
+                          method="post"
+                          id="changePasswordForm"
+                          onsubmit="return validatePasswordForm();">
+
+                        <div class="ksv-form-grid" style="grid-template-columns: 1fr;">
+
+                            <div class="ksv-form-group">
+                                <label for="matKhauCu">
+                                    <i class="fa-solid fa-key" aria-hidden="true"></i>
+                                    Mật khẩu hiện tại
+                                </label>
+                                <input type="password"
+                                       id="matKhauCu"
+                                       name="matKhauCu"
+                                       placeholder="Nhập mật khẩu đang sử dụng"
+                                       autocomplete="current-password"
+                                       required>
+                            </div>
+
+                            <div class="ksv-form-group">
+                                <label for="matKhauMoi">
+                                    <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                                    Mật khẩu mới
+                                </label>
+                                <input type="password"
+                                       id="matKhauMoi"
+                                       name="matKhauMoi"
+                                       placeholder="Tối thiểu 6 ký tự"
+                                       autocomplete="new-password"
+                                       required>
+                            </div>
+
+                            <div class="ksv-form-group">
+                                <label for="xacNhanMatKhau">
+                                    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                                    Xác nhận mật khẩu mới
+                                </label>
+                                <input type="password"
+                                       id="xacNhanMatKhau"
+                                       name="xacNhanMatKhau"
+                                       placeholder="Nhập lại mật khẩu mới"
+                                       autocomplete="new-password"
+                                       required>
+                                <span id="error-message"
+                                      style="color: var(--danger); font-size: 13px; margin-top: 4px; display: none;"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="ksv-form-actions">
+                            <button type="submit" class="ksv-btn ksv-btn-save">
+                                <i class="fa-solid fa-shield" aria-hidden="true"></i>
+                                Cập nhật mật khẩu
+                            </button>
+                        </div>
+
+                    </form>
+                </article>
+            </main>
+
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('avatarInput').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('avatarPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        });
+
+        function validatePasswordForm() {
+            const matKhauMoi = document.getElementById('matKhauMoi').value;
+            const xacNhanMatKhau = document.getElementById('xacNhanMatKhau').value;
+            const errorEl = document.getElementById('error-message');
+
+            errorEl.style.display = 'none';
+            errorEl.textContent = '';
+
+            if (matKhauMoi.length < 6) {
+                errorEl.textContent = 'Mật khẩu mới phải có ít nhất 6 ký tự.';
+                errorEl.style.display = 'block';
+                return false;
+            }
+
+            if (matKhauMoi !== xacNhanMatKhau) {
+                errorEl.textContent = 'Mật khẩu xác nhận không trùng khớp.';
+                errorEl.style.display = 'block';
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+
+</section>
+</body>
+</html>

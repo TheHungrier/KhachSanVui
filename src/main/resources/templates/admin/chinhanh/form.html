@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title th:text="${formTitle}">Biểu mẫu chi nhánh</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-form-container">
+        <div class="ksv-form-header">
+            <div class="ksv-form-header-title">
+                <h1 th:text="${formTitle}">Biểu mẫu chi nhánh</h1>
+                <p>Cấu hình địa chỉ cơ sở, định vị tọa độ bản đồ kinh vĩ độ và banner hiển thị chi nhánh.</p>
+            </div>
+            <a class="ksv-btn-back" th:href="@{/chi-nhanh/admin}">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+            </a>
+        </div>
+
+        <form th:action="@{/chi-nhanh/admin/luu}" th:object="${chiNhanh}" method="post" enctype="multipart/form-data">
+            <div th:if="${error}" class="ksv-alert">
+                <i class="fa-solid fa-circle-xmark"></i>
+                <span th:text="${error}"></span>
+            </div>
+
+            <input type="hidden" th:field="*{maChiNhanh}">
+            <input type="hidden" th:field="*{hinhAnh}">
+
+            <div class="ksv-form-grid">
+                <div class="ksv-form-group">
+                    <label>Tên cơ sở chi nhánh</label>
+                    <input class="ksv-form-input" th:field="*{tenChiNhanh}"
+                           placeholder="Ví dụ: Khách Sạn Vui - Cơ sở Quận 1" required maxlength="100">
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Trạng thái vận hành cơ sở</label>
+                    <select class="ksv-form-select" th:field="*{trangThai}">
+                        <option value="Hiển thị">Hiển thị (Sẵn sàng hoạt động)</option>
+                        <option value="Ẩn">Ẩn (Tạm ngưng hoạt động)</option>
+                    </select>
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Bản đồ: Vĩ độ (Latitude)</label>
+                    <input class="ksv-form-input" th:field="*{viDo}" type="number" step="0.0000001"
+                           placeholder="Ví dụ: 10.776889">
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Bản đồ: Kinh độ (Longitude)</label>
+                    <input class="ksv-form-input" th:field="*{kinhDo}" type="number" step="0.0000001"
+                           placeholder="Ví dụ: 106.700806">
+                </div>
+
+                <div class="ksv-form-group full-width">
+                    <label>Địa chỉ vị trí chi tiết</label>
+                    <input class="ksv-form-input" th:field="*{diaChi}"
+                           placeholder="Nhập số nhà, tên đường, phường/xã, tỉnh thành..." maxlength="200">
+                </div>
+
+                <div class="ksv-form-group full-width">
+                    <label>Hình ảnh đại diện khuôn viên chi nhánh</label>
+                    <input type="file" name="fileAnh" id="ksvBranchFile" accept="image/*" class="ksv-form-file">
+                </div>
+
+                <div class="ksv-form-group full-width">
+                    <label>Mô tả thông tin chi tiết / Giới thiệu cơ sở</label>
+                    <textarea class="ksv-form-textarea" th:field="*{moTa}" rows="4"
+                              placeholder="Nhập thông tin giới thiệu chung về chi nhánh cơ sở..."
+                              maxlength="1000"></textarea>
+                </div>
+            </div>
+
+            <div class="ksv-form-actions">
+                <button class="ksv-btn-save" type="submit">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu dữ liệu chi nhánh
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <meta charset="UTF-8">
+    <title>Liên hệ &amp; Hỗ trợ — KhachSanVui</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <section class="ksv-contact-section"
+             id="lien-he"
+             th:fragment="lienHeSection"
+             aria-labelledby="contact-heading">
+
+        <div class="ksv-contact-inner">
+
+            <!-- Section header -->
+            <div class="ksv-contact-header">
+                <div class="ksv-contact-eyebrow" aria-hidden="true">
+                    <div class="ksv-contact-eyebrow-line"></div>
+                    <span class="ksv-contact-eyebrow-text">
+                        <i class="fa-solid fa-headset"></i>
+                        Hỗ trợ khách hàng
+                    </span>
+                    <div class="ksv-contact-eyebrow-line"></div>
+                </div>
+                <h2 id="contact-heading">Liên hệ &amp; Hỗ trợ</h2>
+                <p>Đội ngũ của chúng tôi luôn sẵn sàng — chọn kênh phù hợp nhất với bạn
+                    để được hỗ trợ nhanh nhất.</p>
+            </div>
+
+            <!-- 3 contact cards -->
+            <div class="ksv-contact-grid">
+
+                <div class="ksv-contact-card">
+                    <div class="ksv-contact-icon-box" aria-hidden="true">
+                        <i class="fa-solid fa-phone-volume"></i>
+                    </div>
+                    <div class="ksv-contact-body">
+                        <h3>Hotline 24/7</h3>
+                        <p class="ksv-contact-value"><a href="tel:18001234">1800 1234</a></p>
+                        <p class="ksv-contact-desc">Miễn phí cước gọi, hỗ trợ xử lý sự cố phòng và đặt dịch vụ khẩn
+                            cấp.</p>
+                    </div>
+                </div>
+
+                <div class="ksv-contact-card">
+                    <div class="ksv-contact-icon-box" aria-hidden="true">
+                        <i class="fa-solid fa-envelope-open-text"></i>
+                    </div>
+                    <div class="ksv-contact-body">
+                        <h3>Hòm thư điện tử</h3>
+                        <p class="ksv-contact-value"><a
+                                href="mailto:support@khachsanvui.com">support@khachsanvui.com</a></p>
+                        <p class="ksv-contact-desc">Phản hồi trong vòng 2 giờ làm việc về hóa đơn, thủ tục hoặc hợp
+                            tác.</p>
+                    </div>
+                </div>
+
+                <div class="ksv-contact-card">
+                    <div class="ksv-contact-icon-box" aria-hidden="true">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div class="ksv-contact-body">
+                        <h3>Trò chuyện trực tuyến</h3>
+                        <div class="ksv-contact-chat-btns">
+                            <a href="https://m.me/khachsanvui" target="_blank" rel="noopener noreferrer"
+                               class="ksv-contact-btn ksv-contact-btn-messenger">
+                                <i class="fa-brands fa-facebook-messenger" aria-hidden="true"></i>Messenger
+                            </a>
+                            <a href="https://zalo.me/khachsanvui" target="_blank" rel="noopener noreferrer"
+                               class="ksv-contact-btn ksv-contact-btn-zalo">
+                                <span class="ksv-zalo-z" aria-hidden="true">Z</span>Zalo
+                            </a>
+                        </div>
+                        <p class="ksv-contact-desc">Kết nối trực tiếp với nhân viên tư vấn để nhận phản hồi ngay lập
+                            tức.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Map + address -->
+            <div class="ksv-contact-bottom">
+
+                <div class="ksv-contact-address-card">
+                    <h3><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>Địa chỉ khách sạn</h3>
+                    <ul class="ksv-contact-address-list">
+                        <li>
+                            <i class="fa-solid fa-location-dot"></i><span>123 Đường Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh</span>
+                        </li>
+                        <li>
+                            <i class="fa-regular fa-clock"></i><span>Nhận phòng: <strong>14:00</strong> — Trả phòng: <strong>12:00</strong></span>
+                        </li>
+                        <li><i class="fa-solid fa-phone"></i><a href="tel:18001234">1800 1234</a></li>
+                        <li><i class="fa-regular fa-envelope"></i><a href="mailto:support@khachsanvui.com">support@khachsanvui.com</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="ksv-contact-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4670648569!2d106.69868!3d10.77577!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f3a9d8d1bb3%3A0xd0a3c914a1b7a0d4!2zTmd1eeG7hW4gSHXhu4csIFF14bqtbiAxLCBUaMOgbmggcGjhu5EgSOG7kyBDaMOtIE1pbmg!5e0!3m2!1svi!2svn!4v1680000000000"
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="Vị trí KhachSanVui trên Google Maps">
+                    </iframe>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</section>
+</body>
+</html>

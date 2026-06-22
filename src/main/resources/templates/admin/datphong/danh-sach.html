@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title>Quản lý đặt phòng</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-page-header">
+        <div class="ksv-page-title">
+            <h1>Quản lý đặt phòng</h1>
+            <p>Xác nhận đơn, tiếp nhận yêu cầu hủy và điều phối cập nhật trạng thái đơn đặt phòng của khách hàng.</p>
+        </div>
+    </div>
+
+    <div th:if="${success}" class="ksv-alert ksv-alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span th:text="${success}"></span>
+    </div>
+    <div th:if="${error}" class="ksv-alert ksv-alert-error">
+        <i class="fa-solid fa-circle-xmark"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:action="@{/dat-phong/admin}" method="get" class="ksv-filter-card" id="filterForm">
+        <div class="ksv-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="keyword" th:value="${keyword}" class="ksv-search-input"
+                   placeholder="Tìm kiếm nhanh tên khách hàng, mã đơn đặt phòng...">
+        </div>
+
+        <select class="ksv-filter-select" name="sortBy" onchange="document.getElementById('filterForm').submit()"
+                aria-label="Sắp xếp phiếu đặt phòng">
+            <option value="" th:selected="${sortBy == null || sortBy == ''}">Sắp xếp mặc định</option>
+            <option value="az" th:selected="${sortBy == 'az'}">Tên khách hàng: A đến Z</option>
+            <option value="za" th:selected="${sortBy == 'za'}">Tên khách hàng: Z đến A</option>
+            <option value="id-asc" th:selected="${sortBy == 'id-asc'}">Mã đơn đặt: Tăng dần</option>
+            <option value="id-desc" th:selected="${sortBy == 'id-desc'}">Mã đơn đặt: Giảm dần</option>
+        </select>
+    </form>
+
+    <div class="ksv-table-card">
+        <table class="ksv-data-table">
+            <thead>
+            <tr>
+                <th style="width: 100px;">Mã đơn</th>
+                <th>Khách hàng</th>
+                <th>Ngày nhận</th>
+                <th>Ngày trả</th>
+                <th>Lý do hủy đơn (Nếu có)</th>
+                <th>Trạng thái</th>
+                <th style="width: 240px; text-align: center;">Cập nhật nhanh</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="d : ${dsDatPhong}">
+                <td><span class="ksv-booking-id" th:text="${'#' + d.maDatPhong}"></span></td>
+                <td>
+                    <span class="ksv-cust-name"
+                          th:text="${d.khachHang != null ? d.khachHang.hoTen : d.hoTen}"></span>
+                </td>
+                <td th:text="${#temporals.format(d.ngayNhan,'dd/MM/yyyy')}"></td>
+                <td th:text="${#temporals.format(d.ngayTra,'dd/MM/yyyy')}"></td>
+                <td>
+                    <span th:text="${d.lyDoHuy != null ? d.lyDoHuy : '───'}"
+                          th:style="${d.lyDoHuy != null ? 'color: var(--red); font-style: italic; font-weight: 500;' : 'color: var(--muted);'}">
+                    </span>
+                </td>
+                <td>
+                    <span class="ksv-status-pill"
+                          th:text="${d.trangThai}"
+                          th:classappend="${d.trangThai == 'Chờ xác nhận' ? 'ksv-status-pending' :
+                                           (d.trangThai == 'Yêu cầu hủy đơn' ? 'ksv-status-req-cancel' :
+                                           (d.trangThai == 'Đã xác nhận' ? 'ksv-status-confirmed' :
+                                           (d.trangThai == 'Đã nhận phòng' ? 'ksv-status-checkin' :
+                                           (d.trangThai == 'Đã trả phòng' ? 'ksv-status-checkout' : 'ksv-status-cancelled'))))}">
+                    </span>
+                </td>
+                <td>
+                    <form th:action="@{/dat-phong/admin/trang-thai/{maDatPhong}(maDatPhong=${d.maDatPhong})}"
+                          method="post" class="ksv-update-form" style="justify-content: center;">
+                        <select name="trangThai" required class="ksv-select-sm">
+                            <option value="Chờ xác nhận" th:selected="${d.trangThai == 'Chờ xác nhận'}">Chờ xác nhận
+                            </option>
+                            <option value="Yêu cầu hủy đơn" th:selected="${d.trangThai == 'Yêu cầu hủy đơn'}">Yêu cầu
+                                hủy đơn
+                            </option>
+                            <option value="Đã xác nhận" th:selected="${d.trangThai == 'Đã xác nhận'}">Đã xác nhận
+                            </option>
+                            <option value="Đã nhận phòng" th:selected="${d.trangThai == 'Đã nhận phòng'}">Đã nhận
+                                phòng
+                            </option>
+                            <option value="Đã trả phòng" th:selected="${d.trangThai == 'Đã trả phòng'}">Đã trả phòng
+                            </option>
+                            <option value="Đã hủy" th:selected="${d.trangThai == 'Đã hủy'}">Đã hủy</option>
+                        </select>
+                        <button type="submit" class="ksv-action-save" title="Lưu thay đổi trạng thái">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(dsDatPhong)}" class="ksv-empty-box">
+            <i class="fa-solid fa-folder-open"
+               style="font-size: 32px; color: var(--border); display: block; margin-bottom: 12px;"></i>
+            Hiện tại không có đơn đặt phòng nào tồn tại trên hệ thống quản trị PMS.
+        </div>
+
+        <div th:if="${pageData.totalPages > 1}" class="ksv-pagination-bar">
+            <div class="ksv-pagination-info"
+                 th:text="${'Hiển thị trang ' + pageData.currentPage + ' / ' + pageData.totalPages + ' (Tổng số ' + pageData.totalElements + ' đơn đặt)'}">
+                Hiển thị dữ liệu thực tế hệ thống PMS
+            </div>
+            <div class="ksv-pagination-controls">
+                <a th:href="@{/dat-phong/admin(page=${pageData.currentPage - 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasPrevious} ? 'disabled' : ''"
+                   th:style="${!pageData.hasPrevious} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
+
+                <span th:each="i : ${#numbers.sequence(1, pageData.totalPages)}">
+                    <a th:href="@{/dat-phong/admin(page=${i}, keyword=${keyword}, sortBy=${sortBy})}"
+                       th:text="${i}"
+                       class="ksv-page-btn"
+                       th:classappend="${i == pageData.currentPage} ? 'active' : ''">
+                    </a>
+                </span>
+
+                <a th:href="@{/dat-phong/admin(page=${pageData.currentPage + 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasNext} ? 'disabled' : ''"
+                   th:style="${!pageData.hasNext} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

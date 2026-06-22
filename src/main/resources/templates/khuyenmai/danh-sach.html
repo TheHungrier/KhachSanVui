@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Danh sách khuyến mãi</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="container" style="margin-top: 30px; margin-bottom: 50px;">
+        <div class="promo-grid">
+
+            <!-- ── Empty State ── -->
+            <div class="promo-empty" th:if="${#lists.isEmpty(khuyenmai)}">
+                <i class="fa-solid fa-ticket-simple" aria-hidden="true"></i>
+                <h4>Chưa có khuyến mãi nào</h4>
+                <p>Các ưu đãi đặc biệt sẽ sớm được cập nhật. Vui lòng quay lại sau!</p>
+            </div>
+
+            <!-- ── Promo Card ── -->
+            <article th:each="p : ${khuyenmai}" class="promo-card">
+
+                <!-- Thumbnail + Discount Badge -->
+                <div class="promo-thumb">
+                    <img th:src="@{/images/{f}(f=${p.hinhAnh != null ? 'sales/' + p.hinhAnh : 'sales/promo-summer.jpg'})}"
+                         th:alt="${p.tenKhuyenMai}">
+                    <span class="discount-badge">
+                        <i class="fa-solid fa-tag" aria-hidden="true"></i>
+                        <span th:if="${p.loaiGiamGia == 'PHAN_TRAM'}"
+                              th:text="${#numbers.formatDecimal(p.giaTriGiam, 1, 0)} + '%'">20%</span>
+
+                        <span th:if="${p.loaiGiamGia == 'SO_TIEN'}"
+                              th:text="${#numbers.formatDecimal(p.giaTriGiam, 1, 'POINT', 0, 'COMMA')} + 'đ'">100.000đ</span>
+                    </span>
+                </div>
+
+                <!-- Coupon Tear Line -->
+                <div class="coupon-divider" aria-hidden="true">
+                    <div class="coupon-notch left"></div>
+                    <div class="coupon-notch right"></div>
+                </div>
+
+                <!-- Body -->
+                <div class="promo-body">
+
+                    <h3 th:text="${p.tenKhuyenMai}">Tên Khuyến Mãi</h3>
+
+                    <p class="promo-desc" th:text="${p.moTa}">Mô tả ngắn về chương trình.</p>
+
+                    <!-- Meta Pills -->
+                    <div class="promo-meta">
+                <span>
+                    <i class="fa-solid fa-percent" aria-hidden="true"></i>
+                    <span th:text="${p.loaiGiamGia == 'PHAN_TRAM' ? 'Giảm theo %' : 'Giảm tiền mặt'}">Loại giảm giá</span>
+                </span>
+                        <span>
+                            <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                            <span th:text="'Còn ' + (${p.soLuongPhongGioiHan} - ${p.soLuongDaDat}) + ' lượt dùng'">Còn 10 lượt</span>
+                        </span>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="promo-actions">
+                        <button type="button"
+                                class="primary-action copy-btn"
+                                th:attr="data-code=${p.maCode}"
+                                onclick="copyCode(this)">
+                            <i class="fa-solid fa-copy" aria-hidden="true"></i>
+                            <span class="btn-text">Copy: [[${p.maCode}]]</span>
+                        </button>
+                    </div>
+
+                </div>
+            </article>
+
+        </div>
+    </div>
+    <script th:inline="javascript">
+        function copyCode(btn) {
+            const code = btn.getAttribute('data-code');
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Đã copy!';
+                btn.style.backgroundColor = '#28a745';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.backgroundColor = '';
+                }, 2000);
+            });
+        }
+    </script>
+</section>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Đặt phòng</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div id="ksvPageData"
+         th:data-gia-phong="${phong.giaPhong}"
+         style="display:none" aria-hidden="true"></div>
+
+    <section class="ksv-checkout-page">
+        <div class="container">
+            <div class="ksv-checkout-stepper">
+                <div class="ksv-checkout-step done">
+                    <span><i class="fa-solid fa-check"></i></span>
+                    <strong>Bạn chọn</strong>
+                </div>
+                <div class="ksv-checkout-line"></div>
+                <div class="ksv-checkout-step active">
+                    <span>2</span>
+                    <strong>Chi tiết về bạn</strong>
+                </div>
+                <div class="ksv-checkout-line"></div>
+                <div class="ksv-checkout-step">
+                    <span>3</span>
+                    <strong>Hoàn tất đặt phòng</strong>
+                </div>
+            </div>
+
+            <form class="ksv-checkout-form"
+                  th:action="@{/dat-phong}"
+                  th:object="${dto}"
+                  method="post">
+
+                <input type="hidden" th:field="*{maPhong}">
+                <input type="hidden" id="inputSoDem" name="soDem" value="1">
+
+                <div class="ksv-checkout-layout">
+
+                    <main class="ksv-checkout-main">
+
+                        <div class="ksv-checkout-login-hint">
+                            <div class="ksv-checkout-login-icon">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <p>
+                                Thông tin của bạn được bảo mật tuyệt đối. Vui lòng
+                                kiểm tra kỹ số điện thoại và email để nhận hóa đơn điện tử
+                                cùng mã phòng từ <strong>KhachSanVui</strong>.
+                            </p>
+                        </div>
+
+                        <section class="ksv-checkout-card">
+                            <div class="ksv-checkout-card-head">
+                                <h1>Nhập thông tin chi tiết của bạn</h1>
+                                <p>Vui lòng kiểm tra thông tin đặt phòng và nhập đầy đủ các trường bắt buộc.</p>
+                            </div>
+
+                            <div class="ksv-checkout-alert">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <div>
+                                    <strong>Gần xong rồi!</strong>
+                                    <span>Chỉ cần điền phần thông tin có dấu * bắt buộc để hoàn tất đặt phòng.</span>
+                                </div>
+                            </div>
+
+                            <div class="ksv-checkout-grid">
+                                <div class="ksv-checkout-group">
+                                    <label for="ngayNhan">Ngày nhận phòng <span>*</span></label>
+                                    <input id="ngayNhan" type="date" th:field="*{ngayNhan}" required>
+                                    <div class="ksv-field-error" id="err-ngayNhan"
+                                         style="display:none;color:#d9534f;font-size:13px;margin-top:6px;"></div>
+                                </div>
+
+                                <div class="ksv-checkout-group">
+                                    <label for="ngayTra">Ngày trả phòng <span>*</span></label>
+                                    <input id="ngayTra" type="date" th:field="*{ngayTra}" required>
+                                    <div class="ksv-field-error" id="err-ngayTra"
+                                         style="display:none;color:#d9534f;font-size:13px;margin-top:6px;"></div>
+                                </div>
+
+                                <div class="ksv-checkout-group">
+                                    <label for="soKhach">Số khách <span>*</span></label>
+                                    <input id="soKhach" type="number"
+                                           min="1" th:max="${phong.sucChua}" step="1"
+                                           th:field="*{soLuongKhach}" required>
+                                    <small th:text="'Phòng này tối đa lưu trú ' + ${phong.sucChua} + ' khách.'"></small>
+                                    <div class="ksv-field-error" id="err-soLuongKhach"
+                                         style="display:none;color:#d9534f;font-size:13px;margin-top:6px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="ksv-checkout-grid field-locked-all"
+                                 sec:authorize="isAuthenticated()">
+
+                                <div class="ksv-checkout-group">
+                                    <label>Họ tên</label>
+                                    <input type="text" th:field="*{hoTen}" readonly tabindex="-1">
+                                </div>
+
+                                <div class="ksv-checkout-group">
+                                    <label>Số điện thoại</label>
+                                    <input type="tel" th:field="*{soDienThoai}" readonly tabindex="-1">
+                                </div>
+
+                                <div class="ksv-checkout-group">
+                                    <label>Email</label>
+                                    <input type="email" th:field="*{email}" readonly tabindex="-1">
+                                    <small>Email xác nhận đặt phòng sẽ được gửi đến địa chỉ này nếu có.</small>
+                                </div>
+
+                                <div class="ksv-checkout-group">
+                                    <label>CCCD</label>
+                                    <input type="text" th:field="*{cccd}" readonly tabindex="-1">
+                                </div>
+
+                                <div class="ksv-checkout-group">
+                                    <label>Địa chỉ</label>
+                                    <input type="text" th:field="*{diaChi}" readonly tabindex="-1">
+                                </div>
+
+                            </div>
+
+                            <div class="ksv-checkout-grid"
+                                 sec:authorize="isAnonymous()">
+
+                                <div class="ksv-checkout-group">
+                                    <label for="hoTen">Họ tên <span>*</span></label>
+                                    <input id="hoTen" type="text" th:field="*{hoTen}"
+                                           placeholder="Ví dụ: Nguyễn Văn An" required>
+                                    <div class="ksv-field-error" id="err-hoTen"
+                                         style="display:none;color:#d9534f;font-size:13px;margin-top:6px;"></div>
+                                </div>
+
+                                <div class="ksv-checkout-group">
+                                    <label for="soDienThoai">Số điện thoại <span>*</span></label>
+                                    <input id="soDienThoai" type="tel" th:field="*{soDienThoai}"
+                                           placeholder="Ví dụ: 0901234567"
+                                           pattern="[0-9]{10}" maxlength="10"
+                                           inputmode="numeric" required>
+                                    <div class="ksv-field-error" id="err-soDienThoai"
+                                         style="display:none;color:#d9534f;font-size:13px;margin-top:6px;"></div>
+                                </div>
+
+                                <div class="ksv-checkout-group">
+                                    <label for="email">Email</label>
+                                    <input id="email" type="email" th:field="*{email}"
+                                           placeholder="Ví dụ: email@example.com">
+                                    <small>Email xác nhận đặt phòng sẽ được gửi đến địa chỉ này nếu có.</small>
+                                </div>
+
+                                <div class="ksv-checkout-group">
+                                    <label for="cccd">CCCD <span>*</span></label>
+                                    <input id="cccd" type="text" th:field="*{cccd}"
+                                           placeholder="Nhập 12 số CCCD đối chiếu khi nhận phòng"
+                                           pattern="[0-9]{12}" maxlength="12" required>
+                                    <div class="ksv-field-error" id="err-cccd"
+                                         style="display:none;color:#d9534f;font-size:13px;margin-top:6px;"></div>
+                                </div>
+
+                                <div class="ksv-checkout-group">
+                                    <label for="diaChi">Địa chỉ</label>
+                                    <input id="diaChi" type="text" th:field="*{diaChi}"
+                                           placeholder="Nhập địa chỉ liên hệ">
+                                </div>
+
+                            </div>
+
+                        </section>
+
+                        <section class="ksv-checkout-card">
+                            <div class="ksv-checkout-card-head">
+                                <h2>Các yêu cầu đặc biệt</h2>
+                                <p>Chỗ nghỉ sẽ cố gắng hỗ trợ yêu cầu của bạn, tuy nhiên không đảm bảo chắc chắn.</p>
+                            </div>
+                            <div class="ksv-checkout-special-box">
+                                <div class="ksv-checkout-special-note">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <div>
+                                        <strong>Ghi chú cho khách sạn</strong>
+                                        <span>Bạn có thể ghi yêu cầu về phòng yên tĩnh, nhận phòng sớm, gần thang máy hoặc nhu cầu khác.</span>
+                                    </div>
+                                </div>
+                                <div class="ksv-checkout-group full">
+                                    <label for="ghiChu">Yêu cầu đặc biệt</label>
+                                    <textarea id="ghiChu" th:field="*{ghiChu}" rows="5"
+                                              placeholder="Ví dụ: Tôi muốn phòng yên tĩnh, nhận phòng sớm hoặc gần thang máy."></textarea>
+                                    <small>Yêu cầu đặc biệt không bắt buộc và sẽ được nhân viên kiểm tra khi xác nhận
+                                        đặt phòng.</small>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="ksv-checkout-card">
+                            <div class="ksv-checkout-card-head">
+                                <h2>Thời gian đến của bạn</h2>
+                                <p>Thông tin này giúp khách sạn chuẩn bị phòng tốt hơn.</p>
+                            </div>
+                            <div class="ksv-checkout-arrival">
+                                <div class="ksv-checkout-arrival-note">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    <span>Phòng của bạn sẽ sẵn sàng để nhận theo thời gian nhận phòng quy định.</span>
+                                </div>
+                                <div class="ksv-checkout-group">
+                                    <label for="thoiGianDenDuKien">Thêm thời gian đến dự kiến của bạn</label>
+                                    <select id="thoiGianDenDuKien" name="thoiGianDenDuKien">
+                                        <option value="">Vui lòng chọn</option>
+                                        <option value="14:00-15:00">14:00 - 15:00</option>
+                                        <option value="15:00-16:00">15:00 - 16:00</option>
+                                        <option value="16:00-18:00">16:00 - 18:00</option>
+                                        <option value="18:00-21:00">18:00 - 21:00</option>
+                                        <option value="21:00-23:00">21:00 - 23:00</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="ksv-checkout-card">
+                            <div class="ksv-checkout-card-head">
+                                <h2>Xem lại quy tắc chung</h2>
+                                <p>Khi tiếp tục đặt phòng, bạn đồng ý với các quy tắc lưu trú của khách sạn.</p>
+                            </div>
+                            <ul class="ksv-checkout-rules">
+                                <li>Không hút thuốc trong phòng.</li>
+                                <li>Không tiệc tùng hoặc gây ồn sau 22:00.</li>
+                                <li>Thời gian nhận phòng từ 14:00 và trả phòng trước 12:00.</li>
+                                <li>Vui lòng mang theo giấy tờ tùy thân khi nhận phòng.</li>
+                            </ul>
+                        </section>
+
+                    </main>
+
+                    <aside class="ksv-checkout-summary-card">
+                        <div class="ksv-checkout-room-box">
+                            <img th:src="@{'/images/rooms/' + ${phong.hinhAnhHienThi}}"
+                                 th:alt="${phong.soPhong}">
+                            <div>
+                                <span class="ksv-checkout-room-status" th:text="${phong.trangThai}">Trống</span>
+                                <h3 th:text="${phong.tenLoaiPhong + ' - ' + phong.soPhong}">Phòng Deluxe - 101</h3>
+                                <p th:text="${phong.moTa}">Mô tả phòng</p>
+                            </div>
+                        </div>
+
+                        <div class="ksv-checkout-summary-section">
+                            <h4>Chi tiết đặt phòng của bạn</h4>
+                            <div class="ksv-checkout-date-grid">
+                                <div>
+                                    <span>Nhận phòng</span>
+                                    <strong id="txtViewNgayNhan"></strong>
+                                </div>
+                                <div>
+                                    <span>Trả phòng</span>
+                                    <strong id="txtViewNgayTra"></strong>
+                                </div>
+                            </div>
+                            <div class="ksv-checkout-summary-line">
+                                <span>Số khách</span>
+                                <strong id="txtViewSoKhach">1</strong>
+                            </div>
+                            <div class="ksv-checkout-summary-line">
+                                <span>Số đêm lưu trú</span>
+                                <strong id="txtHienThiSoDem">1 đêm</strong>
+                            </div>
+                        </div>
+
+                        <div class="ksv-checkout-summary-section">
+                            <h4>Tóm tắt giá</h4>
+
+                            <div class="ksv-checkout-price-line">
+                                <span id="lblTienPhongHienThi">Tiền phòng (1 đêm)</span>
+                                <strong id="txtTienPhongThucTe"
+                                        th:text="${'VND ' + #numbers.formatDecimal(phong.giaPhong, 0, 'POINT', 0, 'COMMA')}">
+                                    VND 320.000
+                                </strong>
+                            </div>
+
+                            <div class="ksv-checkout-price-line">
+                                <span>Thuế &amp; phí dịch vụ (10%)</span>
+                                <strong id="txtThuePhiAside"
+                                        th:text="${'VND ' + #numbers.formatDecimal(phong.giaPhong * 0.1, 0, 'POINT', 0, 'COMMA')}">
+                                    VND 32.000
+                                </strong>
+                            </div>
+
+                            <div class="ksv-checkout-price-line" id="boxGiamGia"
+                                 style="display:none; color:#28a745;">
+                                <span>Mã giảm giá áp dụng</span>
+                                <strong id="txtTienGiamGia">-VND 0</strong>
+                            </div>
+
+                            <div class="ksv-checkout-promo">
+                                <label for="inputMaGiamGia" class="sr-only">Mã giảm giá</label>
+                                <input type="text" id="inputMaGiamGia" th:field="*{maGiamGia}"
+                                       placeholder="Nhập mã giảm giá"
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập mã giảm giá trước khi áp dụng!')"
+                                       oninput="this.setCustomValidity('')">
+                                <button type="button" id="btnApDung">Áp dụng</button>
+                            </div>
+
+                            <div class="ksv-checkout-total">
+                                <span>Tổng tiền</span>
+                                <strong id="txtTongTien"
+                                        th:text="${'VND ' + #numbers.formatDecimal(phong.giaPhong * 1.1, 0, 'POINT', 0, 'COMMA')}">
+                                    VND 352.000
+                                </strong>
+                            </div>
+
+                            <p class="ksv-checkout-note">
+                                Giá hiển thị đã bao gồm toàn bộ tiền phòng theo số đêm bạn chọn và thuế phí quy định.
+                                Khách sạn cam kết không phát sinh chi phí ẩn khi nhận phòng.
+                            </p>
+                        </div>
+
+                        <div class="ksv-checkout-cancel-box">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div>
+                                <strong>Hủy miễn phí trước 24h</strong>
+                                <span>Chính sách có thể thay đổi theo từng thời điểm đặt phòng.</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="ksv-checkout-submit">
+                            Tiếp theo: Hoàn tất đặt phòng
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </aside>
+
+                </div>
+            </form>
+        </div>
+    </section>
+
+</section>
+
+<th:block layout:fragment="additional-scripts">
+    <script>
+        window.GIA_PHONG_GOC = parseFloat(
+            document.getElementById('ksvPageData').dataset.giaPhong
+        ) || 0;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            ['ngayNhan', 'ngayTra'].forEach(function (id) {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('change', function () {
+                    window.capNhatSoDem?.();
+                });
+            });
+            window.capNhatSoDem?.();
+        });
+    </script>
+</th:block>
+
+</body>
+</html>

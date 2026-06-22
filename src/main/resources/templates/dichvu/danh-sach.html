@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Dịch vụ</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <section class="ksv-service-page">
+
+        <section class="ksv-service-hero">
+            <div class="container">
+                <div class="ksv-service-hero-content">
+                    <span class="ksv-service-kicker">
+                        <i class="fa-solid fa-bell-concierge"></i>
+                        Dịch vụ khách sạn
+                    </span>
+
+                    <h1>Dịch vụ tiện ích cho kỳ nghỉ trọn vẹn</h1>
+                    <p>
+                        Khám phá các dịch vụ hỗ trợ lưu trú như ăn sáng, đưa đón, giặt ủi,
+                        thuê xe và nhiều tiện ích khác tại KhachSanVui.
+                    </p>
+
+                    <form class="ksv-service-search" th:action="@{/dich-vu}" method="get">
+                        <div class="ksv-service-search-field">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text"
+                                   name="keyword"
+                                   th:value="${param.keyword}"
+                                   placeholder="Tìm dịch vụ: ăn sáng, đưa đón, giặt ủi...">
+                        </div>
+                        <button type="submit">Tìm</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="ksv-service-section">
+            <div class="container">
+                <div class="ksv-service-section-head">
+                    <div>
+                        <h2>Dịch vụ nổi bật</h2>
+                        <p>Những tiện ích được khách hàng sử dụng nhiều nhất.</p>
+                    </div>
+                </div>
+
+                <div th:if="${dsNoiBat != null and !#lists.isEmpty(dsNoiBat)}"
+                     th:class="${#authorization.expression('isAuthenticated()')} ? 'ksv-service-main-layout' : ''">
+
+                    <div class="ksv-service-feature-grid">
+                        <div th:each="dv : ${dsNoiBat}"
+                             th:classappend="${#authorization.expression('isAuthenticated()')} ? 'ksv-js-selectable' : ''"
+                             th:data-id="${dv.maDichVu}"
+                             th:data-name="${dv.tenDichVu}"
+                             th:data-price="${dv.donGia}"
+                             class="ksv-service-feature-card">
+
+                            <img th:src="@{'/images/services/' + ${dv.hinhAnhHienThi}}" th:alt="${dv.tenDichVu}">
+                            <div class="ksv-service-feature-overlay"></div>
+
+                            <div sec:authorize="isAuthenticated()" class="ksv-card-checkbox">
+                                <i class="fa-solid fa-circle-plus"></i>
+                            </div>
+
+                            <div class="ksv-service-feature-content">
+                                <span><i class="fa-solid fa-sparkles"></i> Dịch vụ</span>
+                                <h3 th:text="${dv.tenDichVu}">Ăn sáng</h3>
+                                <p th:text="${#numbers.formatDecimal(dv.donGia,0,'POINT',0,'COMMA') + '₫'}">120.000₫</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <aside sec:authorize="isAuthenticated()" class="ksv-service-sidebar">
+                        <div class="ksv-sidebar-sticky-card">
+                            <h2 class="ksv-sidebar-title">
+                                <i class="fa-solid fa-cart-flatbed-suitcase" aria-hidden="true"></i>
+                                Dịch vụ đã chọn
+                            </h2>
+
+                            <form th:action="@{/dich-vu/dat-nhieu-dich-vu}" method="post" id="ksvSidebarForm">
+                                <input type="hidden" name="maLuuTru"
+                                       th:value="${param.maLuuTru != null ? param.maLuuTru : 1}">
+
+                                <div id="sidebarCartItems" class="ksv-sidebar-items-list">
+                                    <div class="ksv-cart-empty-state">
+                                        <i class="fa-solid fa-basket-shopping"></i>
+                                        <p>Vui lòng chọn dịch vụ ở bên trái để thêm vào chuyến đi</p>
+                                    </div>
+                                </div>
+
+                                <div class="ksv-sidebar-divider"></div>
+
+                                <div class="ksv-sidebar-total-box">
+                                    <span class="ksv-total-label">
+                                        <i class="fa-solid fa-receipt" aria-hidden="true"></i> Tổng tiền
+                                    </span>
+                                    <span class="ksv-total-value" id="ksvSidebarTotalDisplay">0 ₫</span>
+                                </div>
+
+                                <button type="submit" class="ksv-sidebar-submit-btn" id="btnSubmitCart" disabled>
+                                    <i class="fa-solid fa-wallet" aria-hidden="true"></i>
+                                    Thanh toán qua VNPay
+                                </button>
+                            </form>
+
+                            <div class="ksv-sidebar-note">
+                                <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                                <p>Hệ thống tự động liên kết dịch vụ vào mã lưu trú <strong>#LT-[<span
+                                        th:text="${param.maLuuTru != null ? param.maLuuTru : 1}">1</span>]</strong> của
+                                    bạn.</p>
+                            </div>
+                        </div>
+                    </aside>
+
+                </div>
+
+                <div class="empty-box" th:if="${dsNoiBat == null or #lists.isEmpty(dsNoiBat)}"
+                     style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 8px; color: #718096; font-weight: 500;">
+                    <i class="fa-solid fa-folder-open"
+                       style="font-size: 32px; margin-bottom: 10px; display: block; color: #a0aec0;"></i>
+                    Không tìm thấy dịch vụ nào phù hợp với từ khóa của bạn.
+                </div>
+            </div>
+        </section>
+
+        <section class="ksv-service-section ksv-service-trust-section">
+            <div class="container">
+                <div class="ksv-service-divider"></div>
+                <div class="ksv-service-trip-title">
+                    <h2>Tài khoản và chuyến đi của bạn</h2>
+                </div>
+
+                <div class="ksv-service-account-box" sec:authorize="isAnonymous()">
+                    <div>
+                        <h3>Tất cả thông tin dịch vụ của bạn đều ở cùng một nơi</h3>
+                        <p>Đăng nhập để chọn dịch vụ nhanh hơn, theo dõi các tiện ích đã đặt và quản lý chuyến đi của
+                            bạn dễ dàng hơn.</p>
+                        <div class="ksv-service-account-actions">
+                            <a th:href="@{/login}" class="ksv-service-login-btn">Đăng nhập</a>
+                            <a th:href="@{/register}" class="ksv-service-register-btn">Đăng ký</a>
+                        </div>
+                    </div>
+                    <div class="ksv-service-gift"><i class="fa-solid fa-gift"></i></div>
+                </div>
+
+                <div class="ksv-service-account-box member-mode" sec:authorize="isAuthenticated()"
+                     style="background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%); border: 1px solid #81e6d9;">
+                    <div>
+                        <h3>Chào mừng bạn đã quay trở lại với KhachSanVui!</h3>
+                        <p>Bạn có thể thoải mái tích hợp thêm các dịch vụ ăn uống, spa, giải trí vào mã lưu trú hiện tại
+                            để tận hưởng trọn vẹn kỳ nghỉ của mình.</p>
+                        <div class="ksv-service-account-actions" style="margin-top: 15px;">
+                            <a th:href="@{/dat-phong/lich-su}" class="ksv-service-login-btn"
+                               style="background-color: #319795; color: white;"> Xem lịch sử đặt phòng & dịch vụ
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ksv-service-gift"><i class="fa-solid fa-face-smile-wink" style="color: #319795;"></i>
+                    </div>
+                </div>
+
+                <div class="ksv-service-divider"></div>
+
+                <div class="ksv-service-care-head">
+                    <h2>Bạn cứ vô tư tận hưởng, dịch vụ đã có KhachSanVui lo</h2>
+                </div>
+                <div class="ksv-service-benefit-grid">
+                    <div class="ksv-service-benefit">
+                        <i class="fa-solid fa-tags"></i>
+                        <div>
+                            <h3>Giá rõ ràng, dễ lựa chọn</h3>
+                            <p>Giá dịch vụ được hiển thị minh bạch để bạn dễ so sánh và chọn tiện ích phù hợp với nhu
+                                cầu.</p>
+                        </div>
+                    </div>
+                    <div class="ksv-service-benefit">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <div>
+                            <h3>Nhanh chóng và linh hoạt</h3>
+                            <p>Dễ dàng chọn thêm dịch vụ trong quá trình lưu trú, giúp chuyến đi của bạn thuận tiện
+                                hơn.</p>
+                        </div>
+                    </div>
+                    <div class="ksv-service-benefit">
+                        <i class="fa-solid fa-headset"></i>
+                        <div>
+                            <h3>Được hỗ trợ khi bạn cần</h3>
+                            <p>Đội ngũ KhachSanVui luôn sẵn sàng hỗ trợ khi bạn cần thêm tiện ích hoặc thay đổi dịch
+                                vụ.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="ksv-service-divider"></div>
+            </div>
+        </section>
+
+    </section>
+
+</section>
+<th:block layout:fragment="additional-scripts">
+    <script th:src="@{/js/main.js}"></script>
+</th:block>
+</body>
+</html>

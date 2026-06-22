@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title>Quản lý chiến dịch khuyến mãi</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-page-header">
+        <div class="ksv-page-title">
+            <h1>Quản lý chiến dịch khuyến mãi</h1>
+            <p>Khởi tạo các mã giảm giá điều hành cấu trúc khấu trừ tiền phòng, dịch vụ và định biên số lượng giới hạn
+                phát hành.</p>
+        </div>
+        <a class="ksv-btn-add" th:href="@{/khuyen-mai/admin/them}">
+            <i class="fa-solid fa-ticket"></i> Khởi tạo Voucher mới
+        </a>
+    </div>
+
+    <div th:if="${success}" class="ksv-alert ksv-alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span th:text="${success}"></span>
+    </div>
+    <div th:if="${error}" class="ksv-alert ksv-alert-error">
+        <i class="fa-solid fa-circle-xmark"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:action="@{/khuyen-mai/admin}" method="get" class="ksv-filter-card" id="filterForm">
+        <div class="ksv-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="keyword" th:value="${keyword}" class="ksv-search-input"
+                   placeholder="Tìm kiếm theo mã CODE, tên chương trình khuyên mại...">
+        </div>
+
+        <select class="ksv-filter-select" name="sortBy" onchange="document.getElementById('filterForm').submit()"
+                aria-label="Sắp xếp chuyến dịch">
+            <option value="" th:selected="${sortBy == null || sortBy == ''}">Sắp xếp mặc định</option>
+            <option value="az" th:selected="${sortBy == 'az'}">Tên chiến dịch: A đến Z</option>
+            <option value="za" th:selected="${sortBy == 'za'}">Tên chiến dịch: Z đến A</option>
+            <option value="id-asc" th:selected="${sortBy == 'id-asc'}">Mã số: Tăng dần</option>
+            <option value="id-desc" th:selected="${sortBy == 'id-desc'}">Mã số: Giảm dần</option>
+        </select>
+    </form>
+
+    <div class="ksv-table-card">
+        <table class="ksv-data-table">
+            <thead>
+            <tr>
+                <th style="width: 140px;">Mã CODE</th>
+                <th>Tên chiến dịch khuyến mãi</th>
+                <th>Giá trị giảm khấu trừ</th>
+                <th style="width: 120px; text-align: center;">Giới hạn</th>
+                <th style="width: 120px; text-align: center;">Đã dùng</th>
+                <th>Trạng thái hoạt động</th>
+                <th style="width: 100px; text-align: center;">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="km : ${dsKhuyenMai}">
+                <td><span class="ksv-km-code" th:text="${km.maCode}"></span></td>
+                <td>
+                    <span class="ksv-km-name" th:text="${km.tenKhuyenMai}"></span>
+                    <small style="color: var(--muted);"
+                           th:text="${#temporals.format(km.thoiGianBatDau, 'dd/MM') + ' đến ' + #temporals.format(km.thoiGianKetThuc, 'dd/MM/yyyy')}"></small>
+                </td>
+                <td>
+                    <strong style="color: var(--royal);"
+                            th:text="${km.loaiGiamGia == 'PHAN_TRAM' ? #numbers.formatDecimal(km.giaTriGiam, 0, 'COMMA', 0, 'POINT') + ' %' : #numbers.formatDecimal(km.giaTriGiam, 0, 'COMMA', 0, 'POINT') + ' ₫'}">
+                    </strong>
+                </td>
+                <td style="text-align: center;"
+                    th:text="${km.soLuongPhongGioiHan != null ? km.soLuongPhongGioiHan : 'Không giới hạn'}"></td>
+                <td style="text-align: center;" th:text="${km.soLuongDaDat != null ? km.soLuongDaDat : 0}"></td>
+                <td>
+                    <span class="ksv-status-pill"
+                          th:text="${km.trangThai}"
+                          th:classappend="${km.trangThai == 'Đang diễn ra' ? 'ksv-status-active' : 'ksv-status-inactive'}">
+                    </span>
+                </td>
+                <td>
+                    <div class="ksv-action-btn-group">
+                        <a class="ksv-action-btn ksv-action-edit"
+                           th:href="@{/khuyen-mai/admin/sua/{id}(id=${km.maKhuyenMai})}" title="Chỉnh sửa voucher">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+
+                        <form th:action="@{/khuyen-mai/admin/xoa/{id}(id=${km.maKhuyenMai})}" method="post"
+                              onsubmit="return confirm('Hệ thống sẽ gỡ bỏ chương trình voucher này. Xác nhận tiếp tục?')">
+                            <button type="submit" class="ksv-action-btn ksv-action-delete" title="Xóa khuyến mãi">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(dsKhuyenMai)}" class="ksv-empty-box">
+            <i class="fa-solid fa-folder-open"
+               style="font-size: 32px; color: var(--border); display: block; margin-bottom: 12px;"></i>
+            Hệ thống dữ liệu chiến dịch chương trình khuyến mãi hiện tại trống.
+        </div>
+
+        <div th:if="${pageData.totalPages > 1}" class="ksv-pagination-bar">
+            <div class="ksv-pagination-info"
+                 th:text="${'Hiển thị trang ' + pageData.currentPage + ' / ' + pageData.totalPages + ' (Tổng số ' + pageData.totalElements + ' voucher)'}">
+                Hiển thị dữ liệu thực tế hệ thống PMS
+            </div>
+            <div class="ksv-pagination-controls">
+                <a th:href="@{/khuyen-mai/admin(page=${pageData.currentPage - 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasPrevious} ? 'disabled' : ''"
+                   th:style="${!pageData.hasPrevious} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
+
+                <span th:each="i : ${#numbers.sequence(1, pageData.totalPages)}">
+                    <a th:href="@{/khuyen-mai/admin(page=${i}, keyword=${keyword}, sortBy=${sortBy})}"
+                       th:text="${i}"
+                       class="ksv-page-btn"
+                       th:classappend="${i == pageData.currentPage} ? 'active' : ''">
+                    </a>
+                </span>
+
+                <a th:href="@{/khuyen-mai/admin(page=${pageData.currentPage + 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasNext} ? 'disabled' : ''"
+                   th:style="${!pageData.hasNext} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title>Hệ thống quản trị — Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="ksv-stat-grid">
+        <div class="ksv-stat-card">
+            <div class="ksv-stat-icon"><i class="fa-solid fa-bed"></i></div>
+            <div class="ksv-stat-info">
+                <span>Tổng số phòng</span>
+                <strong th:text="${dashboard.tongPhong}">0</strong>
+            </div>
+        </div>
+
+        <div class="ksv-stat-card">
+            <div class="ksv-stat-icon"><i class="fa-solid fa-users"></i></div>
+            <div class="ksv-stat-info">
+                <span>Hồ sơ khách hàng đăng ký</span>
+                <strong th:text="${dashboard.tongKhachHang}">0</strong>
+            </div>
+        </div>
+
+        <div class="ksv-stat-card">
+            <div class="ksv-stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="ksv-stat-info">
+                <span>Đơn đặt phòng hệ thống</span>
+                <strong th:text="${dashboard.tongDatPhong}">0</strong>
+            </div>
+        </div>
+
+        <div class="ksv-stat-card revenue">
+            <div class="ksv-stat-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
+            <div class="ksv-stat-info">
+                <span>Tổng doanh thu</span>
+                <strong th:text="${dashboard.doanhThu != null ? #numbers.formatDecimal(dashboard.doanhThu,0,'COMMA',0,'POINT') + ' ₫' : '0 ₫'}">0
+                    ₫</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="ksv-charts-main-grid">
+        <div class="ksv-chart-panel">
+            <div class="ksv-panel-header">
+                <h3>Tổng quan lưu lượng vận hành</h3>
+                <p>Số liệu thống kê đối soát mật độ phòng ốc, khách hàng và lưu trú thực tế.</p>
+            </div>
+            <div class="ksv-chart-wrapper">
+                <canvas id="ksvOverviewChart"></canvas>
+            </div>
+        </div>
+
+        <div class="ksv-chart-panel">
+            <div class="ksv-panel-header">
+                <h3>Tình trạng phòng</h3>
+                <p>Phân bổ mật độ phòng theo trạng thái thực tế.</p>
+            </div>
+            <div class="ksv-doughnut-container">
+                <div class="ksv-doughnut-wrapper">
+                    <canvas id="ksvRoomChart" width="150" height="150"></canvas>
+                </div>
+                <div class="ksv-doughnut-legend" id="ksvRoomLegend"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ksv-full-panel">
+        <div class="ksv-panel-header">
+            <h3>Biểu đồ doanh thu theo chu kỳ tháng</h3>
+            <p>Báo cáo doanh số dòng tiền quyết toán thực tế (Đơn vị tính: Triệu đồng)</p>
+        </div>
+        <div class="ksv-chart-wrapper" style="height: 320px;">
+            <canvas id="ksvRevenueChart"></canvas>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const NAVY = '#061f58';
+            const ROYAL = '#0a3f9d';
+            const GOLD = '#f2b731';
+            const MUTED = '#66758a';
+
+            const tongPhong = /*[[${dashboard.tongPhong}]]*/ 0;
+            const tongKhachHang = /*[[${dashboard.tongKhachHang}]]*/ 0;
+            const tongDatPhong = /*[[${dashboard.tongDatPhong}]]*/ 0;
+            const tongLuuTru = /*[[${dashboard.tongLuuTru}]]*/ 0;
+
+            const ovCtx = document.getElementById('ksvOverviewChart').getContext('2d');
+            new Chart(ovCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Tổng phòng', 'Khách hàng', 'Đặt phòng', 'Đang lưu trú'],
+                    datasets: [{
+                        label: 'Số lượng ghi nhận',
+                        data: [tongPhong, tongKhachHang, tongDatPhong, tongLuuTru],
+                        backgroundColor: [ROYAL, GOLD, '#155fca', '#f2b731'],
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        barThickness: 24,
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {display: false},
+                        tooltip: {backgroundColor: NAVY}
+                    },
+                    scales: {
+                        x: {grid: {color: '#eef5ff'}, ticks: {color: MUTED}},
+                        y: {grid: {display: false}, ticks: {color: NAVY, font: {weight: '600'}}}
+                    }
+                }
+            });
+
+            const phongTrong = /*[[${dashboard.phongTrong}]]*/ 0;
+            const phongDangO = /*[[${dashboard.phongDangO}]]*/ 0;
+            const phongDaDat = /*[[${dashboard.phongDaDat}]]*/ 0;
+            const phongBaoTri = /*[[${dashboard.phongBaoTri}]]*/ 0;
+
+            const roomData = [
+                {label: 'Phòng trống khả dụng', value: phongTrong, color: '#0f8a5f'},
+                {label: 'Đang có khách ở', value: phongDangO, color: ROYAL},
+                {label: 'Đã bảo lưu đặt trước', value: phongDaDat, color: GOLD},
+                {label: 'Đang dừng bảo trì', value: phongBaoTri, color: '#c62828'},
+            ];
+
+            const rmCtx = document.getElementById('ksvRoomChart').getContext('2d');
+            new Chart(rmCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: roomData.map(d => d.label),
+                    datasets: [{
+                        data: roomData.map(d => d.value),
+                        backgroundColor: roomData.map(d => d.color),
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: {display: false},
+                        tooltip: {backgroundColor: NAVY}
+                    }
+                }
+            });
+
+            const legendContainer = document.getElementById('ksvRoomLegend');
+            legendContainer.innerHTML = '';
+            roomData.forEach(d => {
+                legendContainer.insertAdjacentHTML('beforeend', `
+                    <div class="ksv-legend-item">
+                        <div class="ksv-legend-left">
+                            <span class="ksv-legend-dot" style="background:${d.color}"></span>
+                            <span>${d.label}</span>
+                        </div>
+                        <span class="ksv-legend-val">${d.value} buồng</span>
+                    </div>
+                `);
+            });
+
+            const revenueLabels = /*[[${dashboard.revenueLabels}]]*/ [];
+            const revenueValues = /*[[${dashboard.revenueValues}]]*/ [];
+
+            const rvCtx = document.getElementById('ksvRevenueChart').getContext('2d');
+            new Chart(rvCtx, {
+                type: 'bar',
+                data: {
+                    labels: revenueLabels,
+                    datasets: [{
+                        data: revenueValues,
+                        backgroundColor: ROYAL,
+                        borderRadius: 6,
+                        barPercentage: 0.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {display: false},
+                        tooltip: {backgroundColor: NAVY}
+                    },
+                    scales: {
+                        x: {grid: {display: false}, ticks: {color: MUTED}},
+                        y: {grid: {color: '#eef5ff'}, ticks: {color: MUTED}, beginAtZero: true}
+                    }
+                }
+            });
+        });
+    </script>
+</section>
+
+</body>
+</html>

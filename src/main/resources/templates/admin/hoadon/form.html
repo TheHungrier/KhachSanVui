@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title>Chi tiết & Thanh toán hóa đơn</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-form-container">
+        <div class="ksv-form-header">
+            <div class="ksv-form-header-title">
+                <h1 th:text="'Thủ tục quyết toán hóa đơn #HĐ-' + ${hoaDon.maHD}">Thu tiền hóa đơn</h1>
+                <p>Kiểm tra đối chiếu các hạng mục chi tiêu tiền phòng, dịch vụ đi kèm trước khi đóng hồ sơ bàn giao
+                    phòng nghỉ.</p>
+            </div>
+            <a class="ksv-btn-back" th:href="@{/hoa-don/admin}">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+            </a>
+        </div>
+
+        <form th:action="@{/hoa-don/admin/xac-nhan/{id}(id=${hoaDon.maHD})}" method="post">
+            <div class="ksv-form-grid">
+                <div class="ksv-form-group">
+                    <label>Đối tượng khách hàng chứng từ</label>
+                    <input class="ksv-form-input" type="text"
+                           th:value="${hoaDon.phieuDatPhong != null and hoaDon.phieuDatPhong.khachHang != null ? hoaDon.phieuDatPhong.khachHang.hoTen : (hoaDon.hoSoLuuTru != null and hoaDon.hoSoLuuTru.khachHang != null ? hoaDon.hoSoLuuTru.khachHang.hoTen : 'Khách vãng lai')}"
+                           readonly>
+                </div>
+                <div class="ksv-form-group">
+                    <label>Số điện thoại liên lạc</label>
+                    <input class="ksv-form-input" type="text"
+                           th:value="${hoaDon.phieuDatPhong != null and hoaDon.phieuDatPhong.khachHang != null ? hoaDon.phieuDatPhong.khachHang.soDienThoai : (hoaDon.hoSoLuuTru != null and hoaDon.hoSoLuuTru.khachHang != null ? hoaDon.hoSoLuuTru.khachHang.soDienThoai : '───')}"
+                           readonly>
+                </div>
+                <div class="ksv-form-group">
+                    <label>Tiền thuê phòng thực tế (A)</label>
+                    <input class="ksv-form-input" type="text" id="ksvTienPhong" th:data-val="${hoaDon.tongTienPhong}"
+                           th:value="${hoaDon.tongTienPhong != null ? #numbers.formatDecimal(hoaDon.tongTienPhong, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}"
+                           readonly style="font-weight: 700;">
+                </div>
+                <div class="ksv-form-group">
+                    <label>Tiền dịch vụ tiêu dùng kèm theo (B)</label>
+                    <input class="ksv-form-input" type="text" id="ksvTienDV" th:data-val="${hoaDon.tongTienDV}"
+                           th:value="${hoaDon.tongTienDV != null ? #numbers.formatDecimal(hoaDon.tongTienDV, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}"
+                           readonly style="font-weight: 700;">
+                </div>
+                <div class="ksv-form-group">
+                    <label>Khấu trừ Voucher giảm giá khấu hao (C)</label>
+                    <input class="ksv-form-input" type="text" id="ksvGiamGia" th:data-val="${hoaDon.giamGia}"
+                           th:value="${hoaDon.giamGia != null ? '-' + #numbers.formatDecimal(hoaDon.giamGia, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}"
+                           readonly style="color: var(--red); font-weight: 700;">
+                </div>
+                <div class="ksv-form-group">
+                    <label>Phụ phí phát sinh cấu hình (D)</label>
+                    <input class="ksv-form-input" type="number" name="phuPhi" id="ksvPhuPhi" value="0" min="0"
+                           step="1000" required style="font-weight: 700; border-color: var(--royal);">
+                </div>
+                <div class="ksv-form-group full-width">
+                    <label>Phương thức giao dịch thanh toán</label>
+                    <select class="ksv-form-select" name="hinhThucThanhToan" id="ksvHinhThuc" required
+                            style="border-color: var(--royal); font-weight: 600;">
+                        <option value="Tiền mặt">Giao dịch Tiền mặt trực tiếp</option>
+                    </select>
+                </div>
+                <div class="ksv-form-group full-width">
+                    <label>Nội dung ghi chú chứng từ sổ biên nhận</label>
+                    <input class="ksv-form-input" type="text" name="ghiChu"
+                           placeholder="Nhập lý do chi tiết áp phụ phí tổn thất thiết bị hoặc ghi chú hoàn trả tiền cọc thừa..."
+                           maxlength="300">
+                </div>
+            </div>
+
+            <div class="ksv-formula-box" style="margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 15px; font-weight: 700; color: var(--navy);">TỔNG TIỀN PHẢI THU THỰC TẾ:</span>
+                    <strong id="ksvTongThucThu" style="font-size: 24px; font-weight: 800; color: #b82435;">0 ₫</strong>
+                </div>
+            </div>
+
+            <div class="ksv-form-actions">
+                <button type="submit" class="ksv-btn-execute">
+                    <i class="fa-solid fa-file-circle-check"></i> Hoàn tất thủ tục thu ngân & Khóa chứng từ hóa đơn
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const tPhong = parseFloat(document.getElementById('ksvTienPhong').getAttribute('data-val')) || 0;
+            const tDV = parseFloat(document.getElementById('ksvTienDV').getAttribute('data-val')) || 0;
+            const gGia = parseFloat(document.getElementById('ksvGiamGia').getAttribute('data-val')) || 0;
+            const inputPhuPhi = document.getElementById('ksvPhuPhi');
+            const targetTong = document.getElementById('ksvTongThucThu');
+
+            function updateTong() {
+                const pPhi = parseFloat(inputPhuPhi.value) || 0;
+                const tong = (tPhong + tDV + pPhi) - gGia;
+                targetTong.textContent = tong.toLocaleString('vi-VN') + ' ₫';
+            }
+
+            inputPhuPhi.addEventListener('input', updateTong);
+
+            // Khởi tạo tính toán tổng tiền ngay khi tải trang
+            updateTong();
+        });
+    </script>
+</section>
+</body>
+</html>

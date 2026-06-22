@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Chi tiết phòng</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <section class="ksv-room-detail-page">
+        <div class="container">
+
+            <!-- Search Bar -->
+            <div class="ksv-room-detail-search">
+                <form class="ksv-search-top-form" th:action="@{/phong}" method="get">
+                    <div class="ksv-search-top-field ksv-search-top-keyword">
+                        <label for="keyword"><i class="fa-solid fa-location-dot"></i> Tìm phòng</label>
+                        <input id="keyword" type="text" name="keyword"
+                               placeholder="Tìm phòng, loại phòng, tiện nghi...">
+                    </div>
+                    <div class="ksv-search-top-field">
+                        <label for="ngayNhan"><i class="fa-regular fa-calendar"></i> Ngày nhận</label>
+                        <input id="ngayNhan" type="date" name="ngayNhan">
+                    </div>
+                    <div class="ksv-search-top-field">
+                        <label for="ngayTra"><i class="fa-regular fa-calendar-check"></i> Ngày trả</label>
+                        <input id="ngayTra" type="date" name="ngayTra">
+                    </div>
+                    <div class="ksv-search-top-field ksv-search-top-guest">
+                        <label for="soKhach"><i class="fa-solid fa-user-group"></i> Số khách</label>
+                        <input id="soKhach" type="number" name="soKhach" min="1" value="1">
+                    </div>
+                    <button type="submit" class="ksv-search-top-btn"><i class="fa-solid fa-magnifying-glass"></i> Tìm
+                    </button>
+                </form>
+            </div>
+
+            <!-- Breadcrumb -->
+            <div class="ksv-room-detail-breadcrumb">
+                <a th:href="@{/}">Trang chủ</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a th:href="@{/phong}">Phòng nghỉ</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span th:text="${phong.tenLoaiPhong + ' - Phòng ' + phong.soPhong}">Chi tiết phòng</span>
+            </div>
+
+            <!-- Tabs -->
+            <nav class="ksv-room-detail-tabs">
+                <a href="#overview" class="active">Tổng quan</a>
+                <a href="#info">Thông tin & giá</a>
+                <a href="#policy">Quy tắc chung</a>
+                <a href="#reviews">Đánh giá</a>
+            </nav>
+
+            <!-- Header -->
+            <div class="ksv-room-detail-header" id="overview">
+                <div class="ksv-room-detail-title">
+                    <div class="ksv-room-detail-title-row">
+                        <h1 th:text="${phong.tenLoaiPhong + ' - Phòng ' + phong.soPhong}">Phòng Deluxe - 101</h1>
+                        <div class="ksv-room-detail-actions">
+                            <a th:href="@{/yeu-thich/toggle/{id}(id=${phong.maPhong})}"
+                               aria-label="Yêu thích"
+                               class="favorite-btn">
+                                <i th:class="${isFavorite} ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
+                                   th:style="${isFavorite} ? 'color: #dc3545;' : ''"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <p class="ksv-room-detail-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span th:text="${phong.getTenChiNhanh()}">Đà Nẵng</span>
+                        <span>·</span>
+                        <a href="#map">Xem trên bản đồ</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Layout chính -->
+            <div class="ksv-room-detail-layout">
+
+                <main class="ksv-room-detail-main">
+
+                    <!-- ===== GALLERY ===== -->
+                    <div class="ksv-room-gallery" id="gallery">
+                        <!-- Ảnh chính -->
+                        <div class="ksv-room-gallery-main">
+                            <img th:attr="src=${danhSachAnh != null and !#lists.isEmpty(danhSachAnh) ? '/images/' + danhSachAnh[0].duongDanAnh : '/images/rooms/' + phong.hinhAnhHienThi}"
+                                 th:alt="${phong.soPhong}" id="mainImage">
+                            <span class="ksv-room-detail-status" th:text="${phong.trangThai}">Trống</span>
+                        </div>
+
+                        <div class="ksv-room-gallery-side" th:if="${danhSachAnh != null and danhSachAnh.size() > 1}">
+                            <img th:each="anh, iter : ${danhSachAnh}"
+                                 th:if="${iter.index > 0 and iter.index < 3}"
+                                 th:attr="src='/images/' + ${anh.duongDanAnh}"
+                                 th:alt="${phong.soPhong}"
+                                 class="gallery-thumb"
+                                 onclick="changeMainImage(this.src)">
+                        </div>
+                        <div class="ksv-room-gallery-side"
+                             th:if="${danhSachAnh == null or #lists.isEmpty(danhSachAnh)}">
+                            <img th:attr="src='/images/rooms/' + ${phong.hinhAnhHienThi}" th:alt="${phong.soPhong}"
+                                 class="gallery-thumb" onclick="changeMainImage(this.src)">
+                            <img th:attr="src='/images/rooms/' + ${phong.hinhAnhHienThi}" th:alt="${phong.soPhong}"
+                                 class="gallery-thumb" onclick="changeMainImage(this.src)">
+                        </div>
+
+                        <div class="ksv-room-gallery-thumbs"
+                             th:if="${danhSachAnh != null and !#lists.isEmpty(danhSachAnh)}">
+                            <img th:each="anh : ${danhSachAnh}"
+                                 th:attr="src='/images/' + ${anh.duongDanAnh}"
+                                 th:alt="${phong.soPhong}"
+                                 class="gallery-thumb"
+                                 onclick="changeMainImage(this.src)">
+                            <button type="button" id="showAllImagesBtn"
+                                    th:if="${danhSachAnh.size() > 4}"
+                                    th:text="'+' + ${danhSachAnh.size() - 4} + ' ảnh'"
+                                    onclick="openGalleryModal()">
+                                +5 ảnh
+                            </button>
+                        </div>
+                        <div class="ksv-room-gallery-thumbs"
+                             th:if="${danhSachAnh == null or #lists.isEmpty(danhSachAnh)}">
+                            <img th:attr="src='/images/rooms/' + ${phong.hinhAnhHienThi}" th:alt="${phong.soPhong}"
+                                 class="gallery-thumb" onclick="changeMainImage(this.src)">
+                            <img th:attr="src='/images/rooms/' + ${phong.hinhAnhHienThi}" th:alt="${phong.soPhong}"
+                                 class="gallery-thumb" onclick="changeMainImage(this.src)">
+                            <img th:attr="src='/images/rooms/' + ${phong.hinhAnhHienThi}" th:alt="${phong.soPhong}"
+                                 class="gallery-thumb" onclick="changeMainImage(this.src)">
+                            <img th:attr="src='/images/rooms/' + ${phong.hinhAnhHienThi}" th:alt="${phong.soPhong}"
+                                 class="gallery-thumb" onclick="changeMainImage(this.src)">
+                            <button type="button">+5 ảnh</button>
+                        </div>
+                    </div>
+
+                    <!-- ===== THÔNG TIN PHÒNG ===== -->
+                    <section class="ksv-room-detail-card" id="info">
+                        <h2>Thông tin phòng</h2>
+                        <p th:text="${phong.moTa}">Mô tả phòng</p>
+                        <div class="ksv-room-detail-facts">
+                            <div>
+                                <i class="fa-solid fa-user-group"></i>
+                                <strong>Sức chứa</strong>
+                                <span th:text="${phong.sucChua + ' khách'}">2 khách</span>
+                            </div>
+                            <div>
+                                <i class="fa-solid fa-ruler-combined"></i>
+                                <strong>Diện tích</strong>
+                                <span th:text="${phong.dienTich != null ? phong.dienTich + ' m²' : 'Đang cập nhật'}">22 m²</span>
+                            </div>
+                            <div>
+                                <i class="fa-solid fa-wifi"></i>
+                                <strong>Tiện nghi</strong>
+                                <span th:text="${phong.tienNghi != null && !phong.tienNghi.isBlank() ? phong.tienNghi : 'Wi-Fi'}">Wi-Fi</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ===== QUY TẮC CHUNG ===== -->
+                    <section class="ksv-room-detail-card" id="policy">
+                        <h2>Quy tắc chung</h2>
+                        <div class="ksv-room-detail-policy">
+                            <div><strong>Nhận phòng</strong><span>Từ 14:00</span></div>
+                            <div><strong>Trả phòng</strong><span>Trước 12:00</span></div>
+                            <div><strong>Hủy đặt phòng</strong><span>Hủy miễn phí trước 24h tùy theo điều kiện đặt phòng.</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ===== ĐÁNH GIÁ ===== -->
+                    <section class="ksv-room-detail-card" id="reviews">
+                        <h2>Đánh giá của khách hàng</h2>
+
+                        <div th:if="${diemTraiNghiemThuc > 0}" class="rating-summary"
+                             style="margin-bottom:20px; display:flex; align-items:center; gap:10px; flex-wrap: wrap;">
+                            <span class="score"
+                                  style="background:var(--navy); color:white; padding:4px 8px; border-radius:6px; font-weight:700; line-height: 1;"
+                                  th:text="${#numbers.formatDecimal(diemTraiNghiemThuc, 1, 1)}">8.0</span>
+
+                            <span class="stars"
+                                  style="color:var(--gold); display: inline-flex; align-items: center; gap: 3px; transform: translateY(6.5px);">
+                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <i class="fa-star"
+                                       style="display: inline-block; line-height: 1; font-size: 16px;"
+                                       th:classappend="${i <= (diemTraiNghiemThuc / 2)} ? 'fa-solid' : 'fa-regular'"></i>
+                                </th:block>
+                            </span>
+
+                            <span class="count" style="color:var(--muted); line-height: 1; display: inline-block;"
+                                  th:text="'(' + ${#lists.size(danhSachDanhGia)} + ' đánh giá)'">(0 đánh giá)</span>
+                        </div>
+
+                        <div th:if="${!#lists.isEmpty(danhSachDanhGia)}">
+                            <div th:each="dg : ${danhSachDanhGia}"
+                                 style="border-bottom:1px solid var(--border); padding:16px 0;">
+                                <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+                                    <strong th:text="${dg.khachHang.hoTen}">Người dùng</strong>
+                                    <span style="font-size:14px;">
+                                        <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                            <i class="fa-regular fa-star"
+                                               th:classappend="${i <= dg.soSao} ? 'fa-solid' : 'fa-regular'"
+                                               style="color:var(--gold); font-size:14px;"></i>
+                                        </span>
+                                    </span>
+                                    <small style="color:var(--muted); margin-left:auto;"
+                                           th:text="${#temporals.format(dg.ngayDanhGia, 'dd/MM/yyyy')}">01/01/2024</small>
+                                </div>
+                                <p style="color:var(--text); line-height:1.6;" th:text="${dg.binhLuan}">Nội dung đánh
+                                    giá...</p>
+                            </div>
+                        </div>
+                        <div th:if="${#lists.isEmpty(danhSachDanhGia)}" class="empty-box">
+                            Chưa có đánh giá nào cho phòng này. Hãy là người đầu tiên đánh giá!
+                        </div>
+
+                        <div class="review-form-container"
+                             style="margin-top: 32px; padding-top: 24px; border-top: 2px dashed var(--border);">
+
+                            <div th:if="${session.USER_LOGIN != null and session.USER_LOGIN.khachHang != null}">
+                                <h3 style="margin-bottom: 16px; font-size: 18px;">Viết đánh giá của bạn</h3>
+                                <form th:action="@{/phong/{id}/danh-gia(id=${phong.maPhong})}" method="post"
+                                      style="max-width: 100%;">
+
+                                    <div style="margin-bottom: 16px;">
+                                        <label style="display:block; font-weight:700; margin-bottom:8px;">Bạn đánh giá
+                                            phòng này mấy sao?</label>
+                                        <div class="star-rating-wrapper">
+                                            <input type="radio" name="soSao" id="star5" value="5" required/><label
+                                                for="star5" title="5 sao"><i class="fa-solid fa-star"></i></label>
+                                            <input type="radio" name="soSao" id="star4" value="4"/><label for="star4"
+                                                                                                          title="4 sao"><i
+                                                class="fa-solid fa-star"></i></label>
+                                            <input type="radio" name="soSao" id="star3" value="3"/><label for="star3"
+                                                                                                          title="3 sao"><i
+                                                class="fa-solid fa-star"></i></label>
+                                            <input type="radio" name="soSao" id="star2" value="2"/><label for="star2"
+                                                                                                          title="2 sao"><i
+                                                class="fa-solid fa-star"></i></label>
+                                            <input type="radio" name="soSao" id="star1" value="1"/><label for="star1"
+                                                                                                          title="1 sao"><i
+                                                class="fa-solid fa-star"></i></label>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-bottom: 16px;">
+                                        <label for="binhLuanText"
+                                               style="display:block; font-weight:700; margin-bottom:8px;">Bình luận nhận
+                                            xét</label>
+                                        <textarea id="binhLuanText" name="binhLuan" rows="4"
+                                                  placeholder="Hãy chia sẻ cảm nhận thực tế của bạn về phòng nghỉ, tiện nghi, dịch vụ..."
+                                                  style="width:100%; border:1px solid var(--border); border-radius:10px; padding:12px; font-family:inherit; resize: vertical;"></textarea>
+                                    </div>
+
+                                    <button type="submit" class="primary-action"
+                                            style="padding: 12px 24px; font-weight: 700; border: none; cursor: pointer;">
+                                        Gửi đánh giá ngay
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div th:if="${session.USER_LOGIN == null}"
+                                 style="padding:16px; background:var(--blue-soft); border-radius:12px; text-align:center;">
+                                <p style="margin: 0; color: var(--navy); font-weight: 500;">
+                                    Bạn muốn đánh giá phòng nghỉ? Vui lòng <a th:href="@{/login}"
+                                                                              style="color:var(--royal); font-weight:700; text-decoration:underline;">Đăng
+                                    nhập tài khoản</a> để tiếp tục.
+                                </p>
+                            </div>
+
+                            <div th:if="${session.USER_LOGIN != null and session.USER_LOGIN.khachHang == null}"
+                                 style="padding:16px; background:#f1f5f9; border-radius:12px; text-align:center; color:var(--muted);">
+                                <i class="fa-solid fa-circle-info"></i> Tài khoản nội bộ (Quản trị/Lễ tân) không có
+                                quyền làm đánh giá phòng.
+                            </div>
+                        </div>
+                    </section>
+
+                </main>
+
+                <aside class="ksv-room-detail-sidebar">
+
+                    <!-- ===== ĐIỂM NỔI BẬT ===== -->
+                    <div class="ksv-room-detail-rating-card">
+                        <h3 style="margin-bottom: 16px; font-size: 18px;">Điểm nổi bật</h3>
+                        <div th:each="hl : ${highlights}" class="highlight-item">
+                            <i th:class="'fa-solid ' + ${hl.icon}"
+                               th:style="'color: ' + (hl.iconColor == 'gold' ? 'var(--gold)' : 'var(--blue)')"></i>
+                            <span class="highlight-text" th:text="${hl.text}">Nội dung</span>
+                            <span th:if="${hl.badge != null}" class="highlight-badge"
+                                  th:text="${hl.badge}">Huy hiệu</span>
+                        </div>
+                    </div>
+
+                    <!-- ===== RATING CARD ===== -->
+                    <div class="ksv-room-detail-rating-card">
+                        <div class="ksv-room-detail-rating-head">
+                            <div>
+                                <strong>Tuyệt vời</strong>
+                                <span th:text="${#lists.size(danhSachDanhGia) + ' đánh giá'}">4 đánh giá</span>
+                            </div>
+                            <b th:text="${#numbers.formatDecimal(diemTraiNghiemThuc, 1, 1)}">9.2</b>
+                        </div>
+
+                        <div class="ksv-room-detail-rating-line">
+                            <span>Khách hàng hài lòng</span>
+                            <strong>
+                                <span th:text="${#numbers.formatDecimal(tyLeHaiLong, 1, 1)}">100.0</span>%
+                            </strong>
+                        </div>
+
+                        <div class="ksv-room-detail-rating-line">
+                            <span>Điểm trải nghiệm thực</span>
+                            <strong th:text="${#numbers.formatDecimal(diemTraiNghiemThuc, 1, 1)}">9.2</strong>
+                        </div>
+                    </div>
+
+                    <!-- ===== GOOGLE MAP ===== -->
+                    <div class="ksv-room-detail-map" id="map"
+                         style="position:relative; height:250px; overflow:hidden; border-radius:12px;">
+                        <iframe th:if="${mapEmbedUrl != null}"
+                                th:src="${mapEmbedUrl}"
+                                width="100%"
+                                height="100%"
+                                style="border:0; position:absolute; top:0; left:0;"
+                                allowfullscreen=""
+                                loading="lazy">
+                        </iframe>
+                        <div th:if="${mapEmbedUrl == null}"
+                             style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#f0f4ff; color:#66758a; font-weight:700; flex-direction:column;">
+                            <i class="fa-solid fa-location-dot" style="font-size:32px; margin-bottom:8px;"></i>
+                            <span>Chưa có thông tin vị trí</span>
+                        </div>
+                        <div style="position:absolute; bottom:12px; left:50%; transform:translateX(-50%); z-index:2; background:rgba(0,0,0,0.7); color:white; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:700;">
+                            <i class="fa-solid fa-location-dot" style="margin-right:6px;"></i> Xem trên Google Maps
+                        </div>
+                    </div>
+
+                    <!-- ===== BOOK CARD ===== -->
+                    <div class="ksv-room-detail-book-card">
+                        <h3>Đặt phòng ngay</h3>
+                        <div class="ksv-room-detail-price">
+                            <span>Giá từ</span>
+                            <div>
+                                <small th:text="${'VND ' + #numbers.formatDecimal(phong.giaPhong * 1.2,0,'POINT',0,'COMMA')}">VND
+                                    400.000</small>
+                                <strong th:text="${'VND ' + #numbers.formatDecimal(phong.giaPhong,0,'POINT',0,'COMMA')}">VND
+                                    320.000</strong>
+                            </div>
+                            <em>1 đêm, đã bao gồm thuế và phí</em>
+                        </div>
+                        <a th:href="@{/dat-phong/phong/{id}(id=${phong.maPhong})}" class="ksv-room-detail-book-btn">Đặt
+                            phòng này</a>
+                    </div>
+
+                </aside>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== MODAL GALLERY ===== -->
+    <div id="galleryModal"
+         style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center; overflow-y:auto; padding:20px;">
+        <div style="background:white; border-radius:20px; max-width:800px; width:100%; max-height:90vh; overflow-y:auto; padding:24px; position:relative;">
+            <button onclick="closeGalleryModal()"
+                    style="position:sticky; top:0; float:right; background:var(--danger); color:white; border:none; border-radius:50%; width:40px; height:40px; font-size:20px; cursor:pointer; z-index:10;">
+                ×
+            </button>
+            <h2 style="margin-bottom:16px;">Tất cả ảnh</h2>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
+                <img th:each="anh : ${danhSachAnh}"
+                     th:src="@{'/images/' + ${anh.duongDanAnh}}"
+                     th:alt="${phong.soPhong}"
+                     style="width:100%; height:200px; object-fit:cover; border-radius:8px; cursor:pointer;"
+                     onclick="changeMainImage(this.src); closeGalleryModal();">
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<th:block layout:fragment="additional-scripts">
+    <script th:src="@{/js/main.js}"></script>
+</th:block>
+
+</body>
+</html>

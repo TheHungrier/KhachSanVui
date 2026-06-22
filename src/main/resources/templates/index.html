@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Trang chủ</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <!-- ========== HERO ========== -->
+    <section class="ksv-hero">
+        <div class="ksv-hero-inner container">
+            <span class="ksv-hero-badge"><i class="fa-solid fa-hotel"></i> KHACHSANVUI</span>
+            <h1>Nghỉ dưỡng trọn vẹn,<br>đặt phòng dễ dàng</h1>
+            <p class="ksv-hero-sub">
+                Tìm phòng phù hợp, so sánh tiện ích và đặt chỗ nhanh chóng cho chuyến đi của bạn tại KhachSanVui.
+            </p>
+
+            <form class="ksv-search" th:action="@{/phong}" method="get">
+                <div class="ksv-search-accent"></div>
+                <div class="ksv-search-body">
+                    <div class="ksv-search-field ksv-search-field--dest">
+                        <label><i class="fa-solid fa-magnifying-glass"></i> Từ khóa</label>
+                        <input type="text" name="keyword" placeholder="Nhập từ khóa,...">
+                    </div>
+                    <div class="ksv-search-field">
+                        <label><i class="fa-solid fa-hotel"></i> Chi nhánh</label>
+                        <select name="maChiNhanh"
+                                style="width: 100%; border: none; background: transparent; outline: none; font-family: inherit; font-size: inherit; color: var(--text);">
+                            <option value="">Tất cả chi nhánh</option>
+                            <option th:each="cn : ${dsChiNhanh}"
+                                    th:value="${cn.maChiNhanh}"
+                                    th:text="${cn.tenChiNhanh}">
+                                KhachSanVui Đà Nẵng
+                            </option>
+                        </select>
+                    </div>
+                    <div class="ksv-search-field">
+                        <label><i class="fa-regular fa-calendar"></i> Ngày nhận phòng</label>
+                        <input type="date" name="ngayNhan">
+                    </div>
+                    <div class="ksv-search-field">
+                        <label><i class="fa-regular fa-calendar-check"></i> Ngày trả phòng</label>
+                        <input type="date" name="ngayTra">
+                    </div>
+                    <div class="ksv-search-field">
+                        <label><i class="fa-solid fa-user-group"></i> Số khách</label>
+                        <input type="number" name="soKhach" min="1" value="1">
+                    </div>
+                    <button type="submit" class="ksv-search-btn"><i class="fa-solid fa-magnifying-glass"></i> Tìm phòng
+                    </button>
+                </div>
+            </form>
+
+            <div class="ksv-filter-tags" aria-label="Bộ lọc nhanh theo nhu cầu">
+                <a th:href="@{/phong(keyword='cặp đôi')}"><i class="fa-solid fa-heart"></i><span>Cặp đôi</span></a>
+                <a th:href="@{/phong(keyword='gia đình')}"><i class="fa-solid fa-users"></i><span>Gia đình</span></a>
+                <a th:href="@{/phong(keyword='công tác')}"><i
+                        class="fa-solid fa-briefcase"></i><span>Công tác</span></a>
+                <a th:href="@{/phong(keyword='tự túc')}"><i class="fa-solid fa-compass"></i><span>Tự túc</span></a>
+                <a th:href="@{/phong(keyword='giá tốt')}"><i class="fa-solid fa-bolt"></i><span>Giá tốt</span></a>
+                <a th:href="@{/phong(keyword='hạng sang')}"><i class="fa-solid fa-crown"></i><span>Hạng sang</span></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ĐIỂM ĐẾN NỔI BẬT ========== -->
+    <section class="ksv-section destination-section" th:if="${diaDiemDLs != null and !#lists.isEmpty(diaDiemDLs)}">
+        <div class="container">
+            <div class="ksv-section-head">
+                <div>
+                    <h2>Địa điểm nổi bật</h2>
+                    <p>Khám phá các thành phố du lịch hàng đầu cả nước.</p>
+                </div>
+            </div>
+            <div class="trend-grid">
+                <a th:each="dd, iterStat : ${diaDiemDLs}"
+                   th:if="${iterStat.index < 5}"
+                   th:href="@{/phong(maChiNhanh=${dd.chiNhanh != null ? dd.chiNhanh.maChiNhanh : ''})}"
+                   th:classappend="${iterStat.index < 2} ? 'trend-card trend-card-large' : 'trend-card'"
+                   class="trend-card">
+
+                    <img th:src="@{/images/{file}(file=${dd.hinhAnh != null ? 'destinations/' + dd.hinhAnh : 'destinations/destination-default.jpg'})}"
+                         th:alt="${dd.tenDiaDiem}">
+                    <div class="trend-overlay"></div>
+                    <div class="trend-content">
+                        <h3>
+                            <span th:text="${dd.tenDiaDiem}">Đà Nẵng</span>
+                            <img class="trend-flag" th:src="@{/images/about/flag-vn.png}" alt="Việt Nam">
+                        </h3>
+                        <p th:text="${dd.moTa}">Điểm đến hấp dẫn</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FLASH SALE ========== -->
+    <section class="deal-section" th:if="${!#lists.isEmpty(flashSales)}">
+        <div class="container">
+            <div th:with="km=${flashSales[0]}" class="flash-deal-card single">
+
+                <!-- ── Image Side ── -->
+                <div class="flash-deal-image">
+                    <img th:src="@{/images/{f}(f=${km.hinhAnh != null ? 'sales/' + km.hinhAnh : 'sales/flash-deluxe.jpg'})}"
+                         th:alt="${km.tenKhuyenMai}">
+                    <span class="last-min-tag">
+                    <i class="fa-solid fa-clock" aria-hidden="true"></i>
+                    Khuyến mãi phút cuối
+                </span>
+                </div>
+
+                <!-- ── Info Side ── -->
+                <div class="flash-deal-info">
+                <span class="deal-kicker">
+                    <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                    Flash Sale giờ chót
+                </span>
+
+                    <h2 th:text="${km.tenKhuyenMai}">Phòng Deluxe giảm mạnh</h2>
+                    <p th:text="${km.moTa}">Không gian tiện nghi, view đẹp...</p>
+
+                    <!-- Countdown -->
+                    <div class="countdown-box"
+                         th:data-endtime="${#temporals.format(km.thoiGianKetThuc, 'yyyy/MM/dd HH:mm:ss')}">
+                        <div><strong>00</strong><span>Giờ</span></div>
+                        <b>:</b>
+                        <div><strong>00</strong><span>Phút</span></div>
+                        <b>:</b>
+                        <div><strong>00</strong><span>Giây</span></div>
+                    </div>
+
+                    <!-- Progress -->
+                    <div class="deal-progress-label">
+                        <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                        Chỉ còn
+                        <strong th:text="${km.soLuongPhongGioiHan - km.soLuongDaDat}">2</strong>
+                        phòng trống giá này
+                    </div>
+                    <div class="deal-progress" role="progressbar"
+                         th:attr="aria-valuenow=${km.soLuongPhongGioiHan != null and km.soLuongPhongGioiHan > 0 ? (km.soLuongDaDat * 100) / km.soLuongPhongGioiHan : 0}">
+                        <span th:style="|width: ${km.soLuongPhongGioiHan != null and km.soLuongPhongGioiHan > 0 ? (km.soLuongDaDat * 100) / km.soLuongPhongGioiHan : 0}%;|"></span>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="deal-actions">
+                        <button type="button"
+                                class="primary-action deal-action copy-flash-btn"
+                                th:attr="data-code=${km.maCode}"
+                                onclick="copyFlashCode(this)">
+                            <i class="fa-solid fa-copy" aria-hidden="true"></i>
+                            <span>Copy mã: [[${km.maCode}]]</span>
+                        </button>
+
+                        <a th:href="@{/khuyen-mai}" class="secondary-action">Xem khuyến mãi</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PHÒNG NỔI BẬT ========== -->
+    <section class="ksv-section">
+        <div class="container">
+            <div class="ksv-section-head">
+                <div>
+                    <h2>Phòng nghỉ được yêu thích</h2>
+                    <p>Lựa chọn phòng phù hợp cho kỳ nghỉ của bạn. Bấm để xem chi tiết.</p>
+                </div>
+                <a th:href="@{/phong}" class="ksv-link">Xem tất cả phòng</a>
+            </div>
+
+            <div class="ksv-room-carousel-wrap" th:if="${phongNoiBat != null and !#lists.isEmpty(phongNoiBat)}">
+                <button class="room-carousel-btn room-carousel-prev"
+                        type="button"
+                        aria-label="Xem phòng trước">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="ksv-room-grid ksv-room-carousel" id="roomCarousel">
+                    <a th:each="p : ${phongNoiBat}"
+                       th:href="@{/phong/{id}(id=${p.maPhong})}"
+                       class="ksv-room-card">
+                        <div class="ksv-room-img">
+                            <img th:src="@{'/images/rooms/' + ${p.hinhAnhHienThi}}" th:alt="${p.soPhong}">
+                            <span class="ksv-room-badge" th:text="${p.trangThai}">Còn phòng</span>
+                            <span class="room-wishlist"
+                                  role="link"
+                                  tabindex="0"
+                                  aria-label="Danh sách yêu thích"
+                                  onclick="event.preventDefault(); event.stopPropagation(); window.location.href='/yeu-thich';"
+                                  onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); window.location.href='/yeu-thich'; }">
+                                <i class="fa-solid fa-heart"></i>
+                            </span>
+                        </div>
+                        <div class="ksv-room-body">
+                            <div class="room-title-row booking-style">
+                                <div>
+                                    <h3 th:text="${p.tenLoaiPhong + ' – ' + p.soPhong}">Deluxe – 101</h3>
+                                    <p class="room-location"><i class="fa-solid fa-location-dot"></i> KhachSanVui Hotel
+                                    </p>
+                                </div>
+                                <div class="booking-rating">
+                                    <div class="rating-text"><strong>Tuyệt vời</strong><span>98 đánh giá</span></div>
+                                    <b>8.8</b>
+                                </div>
+                            </div>
+                            <p class="ksv-room-desc" th:text="${p.moTa}">Phòng tiện nghi, phù hợp lưu trú ngắn ngày.</p>
+                            <div class="ksv-room-tags">
+                                <span th:text="${p.sucChua + ' khách'}">2 khách</span>
+                                <span th:text="${p.dienTich != null ? p.dienTich + ' m²' : 'Tiện nghi'}">22 m²</span>
+                                <span>Wi-Fi</span>
+                            </div>
+                            <div class="ksv-room-bottom">
+                                <div class="room-price-stack">
+                        <span class="old-price"
+                              th:text="${'VND ' + #numbers.formatDecimal(p.giaPhong * 1.2,0,'COMMA',0,'POINT')}">
+                            VND 400.000
+                        </span>
+                                    <strong class="ksv-room-price"
+                                            th:text="${'VND ' + #numbers.formatDecimal(p.giaPhong,0,'COMMA',0,'POINT')}">
+                                        VND 320.000
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <button class="room-carousel-btn room-carousel-next"
+                        type="button"
+                        aria-label="Xem phòng tiếp theo">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="empty-box" th:if="${phongNoiBat == null or #lists.isEmpty(phongNoiBat)}">
+                Chưa có phòng nổi bật để hiển thị.
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== LOẠI PHÒNG PHỔ BIẾN ========== -->
+    <section class="ksv-section ksv-section--alt">
+        <div class="container">
+            <div class="ksv-section-head">
+                <div>
+                    <h2>Loại phòng phổ biến</h2>
+                    <p>Chọn nhanh loại phòng phù hợp với nhu cầu lưu trú của bạn.</p>
+                </div>
+                <a th:href="@{/phong}" class="ksv-link">Xem tất cả</a>
+            </div>
+            <div class="visual-carousel-wrap" th:if="${dsLoaiPhong != null and !#lists.isEmpty(dsLoaiPhong)}">
+                <button class="visual-carousel-btn visual-carousel-prev"
+                        type="button"
+                        data-carousel-target="typeCarousel"
+                        data-carousel-direction="-1"
+                        aria-label="Xem loại phòng trước">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="visual-card-grid visual-carousel" id="typeCarousel">
+                    <a th:each="lp : ${dsLoaiPhong}"
+                       th:href="@{/phong(maLoaiPhong=${lp.maLoaiPhong})}"
+                       class="visual-card">
+                        <img th:src="@{/images/rooms/room-deluxe.jpg}" alt="Loại phòng">
+                        <div class="visual-overlay"></div>
+                        <div class="visual-content">
+                            <h3 th:text="${lp.tenLoaiPhong}">Phòng Deluxe</h3>
+                            <p th:text="${lp.moTa}">Không gian tiện nghi, phù hợp lưu trú.</p>
+                        </div>
+                    </a>
+                </div>
+                <button class="visual-carousel-btn visual-carousel-next"
+                        type="button"
+                        data-carousel-target="typeCarousel"
+                        data-carousel-direction="1"
+                        aria-label="Xem loại phòng tiếp theo">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="empty-box" th:if="${dsLoaiPhong == null or #lists.isEmpty(dsLoaiPhong)}">
+                Chưa có loại phòng để hiển thị.
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== DỊCH VỤ ========== -->
+    <section class="ksv-section">
+        <div class="container">
+            <div class="ksv-section-head">
+                <div>
+                    <h2>Dịch vụ nổi bật</h2>
+                    <p>Những tiện ích giúp kỳ nghỉ của bạn thoải mái hơn.</p>
+                </div>
+                <a th:href="@{/dich-vu}" class="ksv-link">Xem dịch vụ</a>
+            </div>
+            <div class="visual-carousel-wrap" th:if="${dichVuNoiBat != null and !#lists.isEmpty(dichVuNoiBat)}">
+                <button class="visual-carousel-btn visual-carousel-prev"
+                        type="button"
+                        data-carousel-target="serviceCarousel"
+                        data-carousel-direction="-1"
+                        aria-label="Xem dịch vụ trước">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="visual-card-grid visual-carousel" id="serviceCarousel">
+                    <a th:each="dv : ${dichVuNoiBat}"
+                       th:href="@{/dich-vu}"
+                       class="visual-card visual-card-service">
+                        <img th:src="@{'/images/services/' + ${dv.hinhAnhHienThi}}" th:alt="${dv.tenDichVu}">
+                        <div class="visual-overlay"></div>
+                        <div class="visual-content">
+                            <h3 th:text="${dv.tenDichVu}">Ăn sáng</h3>
+                            <p th:text="${dv.moTa}">Dịch vụ tiện lợi cho khách lưu trú.</p>
+                        </div>
+                    </a>
+                </div>
+                <button class="visual-carousel-btn visual-carousel-next"
+                        type="button"
+                        data-carousel-target="serviceCarousel"
+                        data-carousel-direction="1"
+                        aria-label="Xem dịch vụ tiếp theo">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="empty-box" th:if="${dichVuNoiBat == null or #lists.isEmpty(dichVuNoiBat)}">
+                Chưa có dịch vụ nổi bật để hiển thị.
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== REVIEWS ========== -->
+    <section class="ksv-section reviews-section"
+             th:if="${danhGiaNoiBat != null and !#lists.isEmpty(danhGiaNoiBat)}">
+        <div class="container">
+            <div class="ksv-section-head centered-head">
+                <div>
+                    <h2>Khách hàng nói gì về KhachSanVui?</h2>
+                    <p>Đánh giá thật, trải nghiệm rõ ràng để bạn yên tâm trước khi đặt phòng.</p>
+                </div>
+            </div>
+
+            <div class="review-grid booking-review-grid">
+                <article th:each="dg : ${danhGiaNoiBat}" class="review-card booking-review-card">
+
+                    <!-- Header: Avatar + Name + Badges -->
+                    <div class="review-header">
+                        <div class="review-avatar">
+                            <img th:src="${dg.hinhAnhKhach != null
+                                       ? '/images/avatars/' + dg.hinhAnhKhach
+                                       : '/images/avatars/avatar-default.png'}"
+                                 th:alt="${dg.tenKhachHang}"/>
+                        </div>
+                        <div class="review-meta">
+                            <strong class="review-name" th:text="${dg.tenKhachHang}">Tên khách</strong>
+                            <div class="review-badges">
+                                <span class="badge-loyal">Khách hàng thân thiết</span>
+                                <span class="badge-score" th:text="${dg.soSao} + '.0'">9.2</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Body: Quotation-styled comment -->
+                    <div class="review-body">
+                        <p th:text="${dg.binhLuan}">Nội dung đánh giá...</p>
+                    </div>
+
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FAQ ========== -->
+    <section class="ksv-section faq-section">
+        <div class="container faq-container">
+            <div class="ksv-section-head centered-head">
+                <div>
+                    <h2>Bạn có câu hỏi? KhachSanVui trả lời</h2>
+                    <p>Một số thông tin thường gặp trước khi đặt phòng.</p>
+                </div>
+            </div>
+
+            <div class="faq-list">
+                <details class="faq-item" open>
+                    <summary>Tôi có cần thanh toán trước khi nhận phòng không?</summary>
+                    <p>Bạn có thể thanh toán online để giữ phòng hoặc thanh toán tiền mặt tại khách sạn tùy theo quy
+                        định đặt phòng.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Tôi có thể hủy đơn đặt phòng không?</summary>
+                    <p>Bạn có thể hủy đơn khi đơn đang ở trạng thái chờ xác nhận hoặc đã xác nhận, kèm lý do hủy rõ
+                        ràng.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Làm sao để xem lịch sử đặt phòng?</summary>
+                    <p>Sau khi đăng nhập, bạn chọn mục tài khoản hoặc truy cập Lịch sử đặt phòng để theo dõi các đơn đã
+                        tạo.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>KhachSanVui có hỗ trợ thanh toán VNPay không?</summary>
+                    <p>Có. Hệ thống hỗ trợ tạo giao dịch VNPay cho hóa đơn đặt phòng, đồng thời vẫn có lựa chọn thanh
+                        toán tiền mặt tại khách sạn.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Tôi có thể đặt phòng mà chưa có tài khoản không?</summary>
+                    <p>Bạn có thể xem phòng và tạo thông tin đặt phòng. Tuy nhiên đăng nhập giúp bạn quản lý lịch sử đặt
+                        phòng thuận tiện hơn.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Thông tin giá phòng đã bao gồm dịch vụ chưa?</summary>
+                    <p>Giá phòng hiển thị theo từng đêm. Các dịch vụ phát sinh như ăn uống, giặt ủi hoặc đưa đón sẽ được
+                        ghi nhận riêng khi sử dụng.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+    <script>
+        function copyFlashCode(btn) {
+            const code = btn.getAttribute('data-code');
+            if (!code) return;
+
+            navigator.clipboard.writeText(code).then(() => {
+                const originalContent = btn.innerHTML;
+
+                btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã copy mã!';
+                btn.style.backgroundColor = '#28a745';
+
+                // Trả về trạng thái cũ sau 2 giây
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.style.backgroundColor = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Lỗi khi copy mã: ', err);
+            });
+        }
+    </script>
+</section>
+
+</body>
+</html>
