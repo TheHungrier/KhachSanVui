@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Danh sách phòng</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <section class="ksv-list-page">
+        <div class="container">
+
+            <div class="ksv-list-search-top">
+                <form class="ksv-list-search-form" th:action="@{/phong}" method="get">
+                    <div class="ksv-list-search-field ksv-list-search-field-wide">
+                        <label for="input-tim-phong">
+                            <i class="fa-solid fa-location-dot"></i>
+                            Tìm phòng
+                        </label>
+                        <input type="text"
+                               id="input-tim-phong"
+                               name="keyword"
+                               placeholder="Tìm phòng, loại phòng,..."
+                               th:value="${keyword}">
+                    </div>
+
+                    <div class="ksv-list-search-field">
+                        <label for="maChiNhanh">
+                            <i class="fa-solid fa-hotel"></i>
+                            Chi nhánh
+                        </label>
+                        <select id="maChiNhanh" name="maChiNhanh">
+                            <option value="">Tất cả chi nhánh</option>
+                            <option th:each="cn : ${dsChiNhanh}"
+                                    th:value="${cn.maChiNhanh}"
+                                    th:selected="${maChiNhanh != null && maChiNhanh == cn.maChiNhanh}"
+                                    th:text="${cn.tenChiNhanh}">
+                                KhachSanVui Sài Gòn
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="ksv-list-search-field">
+                        <label for="maLoaiPhong">
+                            <i class="fa-solid fa-bed"></i>
+                            Loại phòng
+                        </label>
+                        <select id="maLoaiPhong" name="maLoaiPhong">
+                            <option value="">Tất cả</option>
+                            <option th:each="lp : ${dsLoaiPhong}"
+                                    th:value="${lp.maLoaiPhong}"
+                                    th:selected="${maLoaiPhong != null && maLoaiPhong == lp.maLoaiPhong}"
+                                    th:text="${lp.tenLoaiPhong}">
+                                Deluxe
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="ksv-list-search-field">
+                        <label for="ngayNhan">
+                            <i class="fa-regular fa-calendar"></i>
+                            Ngày nhận
+                        </label>
+                        <input id="ngayNhan"
+                               type="date"
+                               name="ngayNhan"
+                               th:value="${ngayNhan}">
+                    </div>
+
+                    <div class="ksv-list-search-field">
+                        <label for="ngayTra">
+                            <i class="fa-regular fa-calendar-check"></i>
+                            Ngày trả
+                        </label>
+                        <input id="ngayTra"
+                               type="date"
+                               name="ngayTra"
+                               th:value="${ngayTra}">
+                    </div>
+
+                    <div class="ksv-list-search-field">
+                        <label for="soKhach">
+                            <i class="fa-solid fa-user-group"></i>
+                            Số khách
+                        </label>
+                        <input id="soKhach"
+                               type="number"
+                               name="soKhach"
+                               min="1"
+                               placeholder="1"
+                               th:value="${soKhach}">
+                    </div>
+
+                    <button type="submit" class="ksv-list-search-btn">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Tìm
+                    </button>
+                </form>
+            </div>
+
+            <div class="ksv-list-breadcrumb">
+                <a th:href="@{/}">Trang chủ</a>
+                <span>/</span>
+                <strong>Phòng nghỉ</strong>
+            </div>
+
+            <div class="ksv-list-layout">
+                <aside class="ksv-list-sidebar">
+                    <form class="ksv-list-filter-form" th:action="@{/phong}" method="get">
+
+                        <input type="hidden" name="keyword" th:value="${keyword}">
+                        <input type="hidden" name="maChiNhanh" th:value="${maChiNhanh}">
+                        <input type="hidden" name="maLoaiPhong" th:value="${maLoaiPhong}">
+                        <input type="hidden" name="ngayNhan" th:value="${ngayNhan}">
+                        <input type="hidden" name="ngayTra" th:value="${ngayTra}">
+                        <input type="hidden" name="soKhach" th:value="${soKhach}">
+
+                        <div class="ksv-list-filter-head">
+                            <h3>Chọn lọc theo</h3>
+                            <p>Tìm phòng phù hợp với nhu cầu lưu trú của bạn.</p>
+                        </div>
+
+                        <div class="ksv-list-filter-box">
+                            <h4>Ngân sách mỗi đêm</h4>
+                            <label class="ksv-list-radio">
+                                <input type="radio" name="gia" value="all"
+                                       th:checked="${param.gia == null || param.gia[0] == 'all'}">
+                                <span>Tất cả mức giá</span>
+                            </label>
+                            <label class="ksv-list-radio">
+                                <input type="radio" name="gia" value="duoi-500"
+                                       th:checked="${param.gia != null && param.gia[0] == 'duoi-500'}">
+                                <span>Dưới VND 500.000</span>
+                            </label>
+                            <label class="ksv-list-radio">
+                                <input type="radio" name="gia" value="500-1000"
+                                       th:checked="${param.gia != null && param.gia[0] == '500-1000'}">
+                                <span>VND 500.000 - VND 1.000.000</span>
+                            </label>
+                            <label class="ksv-list-radio">
+                                <input type="radio" name="gia" value="tren-1000"
+                                       th:checked="${param.gia != null && param.gia[0] == 'tren-1000'}">
+                                <span>Trên VND 1.000.000</span>
+                            </label>
+                        </div>
+
+                        <div class="ksv-list-filter-box">
+                            <h4>Bộ lọc phổ biến</h4>
+
+                            <label class="ksv-list-check">
+                                <input type="checkbox" name="danhGiaCao" value="9"
+                                       th:checked="${param.danhGiaCao != null}">
+                                <span> Đánh giá cao </span>
+                            </label>
+
+                            <label class="ksv-list-check">
+                                <input type="checkbox" name="tienNghi" value="Wifi"
+                                       th:checked="${param.tienNghi != null && #arrays.contains(param.tienNghi, 'Wifi')}">
+                                <span>Wi-Fi miễn phí</span>
+                            </label>
+
+                            <label class="ksv-list-check">
+                                <input type="checkbox" name="tienNghi" value="BanCong"
+                                       th:checked="${param.tienNghi != null && #arrays.contains(param.tienNghi, 'BanCong')}">
+                                <span>Có ban công hướng phố</span>
+                            </label>
+
+                            <label class="ksv-list-check">
+                                <input type="checkbox" name="tienNghi" value="BoNoiThat"
+                                       th:checked="${param.tienNghi != null && #arrays.contains(param.tienNghi, 'BoNoiThat')}">
+                                <span>Bồn tắm nằm riêng</span>
+                            </label>
+
+                            <label class="ksv-list-check">
+                                <input type="checkbox" name="tienNghi" value="AnSang"
+                                       th:checked="${param.tienNghi != null && #arrays.contains(param.tienNghi, 'AnSang')}">
+                                <span>Bao gồm bữa sáng</span>
+                            </label>
+                        </div>
+
+                        <div class="ksv-list-filter-actions">
+                            <button type="submit" class="ksv-list-filter-submit">
+                                <i class="fa-solid fa-filter"></i> Áp dụng bộ lọc
+                            </button>
+                            <a th:href="@{/phong}" class="ksv-list-filter-reset">Xóa bộ lọc</a>
+                        </div>
+                    </form>
+                </aside>
+
+                <main class="ksv-list-results">
+                    <div class="ksv-list-result-head">
+                        <div>
+                            <h1>
+                                <span th:if="${keyword != null and !keyword.isBlank()}"
+                                      th:text="${keyword + ': kết quả tìm kiếm'}">
+                                    Kết quả tìm kiếm
+                                </span>
+                                <span th:if="${keyword == null or keyword.isBlank()}">
+                                    Danh sách phòng nghỉ
+                                </span>
+                            </h1>
+                            <p>Chọn phòng phù hợp, xem chi tiết và đặt phòng nhanh chóng.</p>
+                        </div>
+                    </div>
+
+                    <div class="ksv-list-sort-row">
+                        <div class="ksv-custom-dropdown">
+                            <div class="ksv-dropdown-selected ksv-sort-select" onclick="toggleDropdown()">
+                                <div class="ksv-dropdown-selected-content">
+                                    <span class="ksv-dropdown-label">
+                                        <i class="fa-solid fa-arrow-down-wide-short"></i> Sắp xếp theo:
+                                    </span>
+                                    <strong id="selected-text" class="ksv-selected-text">Lựa chọn hàng đầu</strong>
+                                </div>
+
+                                <i class="fa-solid fa-chevron-down ksv-dropdown-icon"></i>
+                            </div>
+
+                            <ul class="ksv-dropdown-list" id="dropdown-list">
+                                <li onclick="selectOption('macDinh', 'Lựa chọn hàng đầu')">Lựa chọn hàng đầu</li>
+                                <li onclick="selectOption('giaTang', 'Giá: Từ thấp đến cao')">Giá: Từ thấp đến cao</li>
+                                <li onclick="selectOption('giaGiam', 'Giá: Từ cao đến thấp')">Giá: Từ cao đến thấp</li>
+                                <li onclick="selectOption('diemGiam', 'Điểm đánh giá cao nhất')">Điểm đánh giá cao
+                                    nhất
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="customer-room-grid" th:if="${dsPhong != null and !#lists.isEmpty(dsPhong)}">
+
+                        <a th:each="p : ${dsPhong}"
+                           th:href="@{/phong/{id}(id=${p.maPhong})}"
+                           class="ksv-list-room-card">
+
+                            <div class="ksv-list-room-image">
+                                <img th:src="@{'/images/rooms/' + ${p.hinhAnhHienThi}}"
+                                     th:alt="${p.soPhong}">
+
+                                <span class="ksv-list-room-status"
+                                      th:text="${p.trangThai}">
+                                    Trống
+                                </span>
+
+                                <span class="ksv-list-heart">
+                                    <i class="fa-regular fa-heart"></i>
+                                </span>
+                            </div>
+
+                            <div class="ksv-list-room-body">
+                                <div class="ksv-list-room-main">
+
+                                    <div class="ksv-list-room-info">
+                                        <h2 th:text="${p.tenLoaiPhong + ' - ' + p.soPhong}">
+                                            Phòng Deluxe - 101
+                                        </h2>
+
+                                        <div class="ksv-list-room-location">
+                                            <i class="fa-solid fa-location-dot"></i>
+                                            <span th:text="${p.getTenChiNhanh()}">KhachSanVui Sài Gòn</span>
+                                            <span>·</span>
+                                            <span>Xem trên bản đồ</span>
+                                        </div>
+
+                                        <p class="ksv-list-room-desc"
+                                           th:text="${p.moTa}">
+                                            Mô tả phòng
+                                        </p>
+
+                                        <div class="ksv-list-room-icons">
+                                            <span>
+                                                <i class="fa-solid fa-user-group"></i>
+                                                <span th:text="${p.sucChua + ' khách'}">2 khách</span>
+                                            </span>
+
+                                            <span>
+                                                <i class="fa-solid fa-ruler-combined"></i>
+                                                <span th:text="${p.dienTich != null ? p.dienTich + ' m²' : 'Tiện nghi'}">22 m²</span>
+                                            </span>
+
+                                            <span>
+                                                <i class="fa-solid fa-wifi"></i>
+                                                <span th:text="${p.tienNghi != null && !p.tienNghi.isBlank() ? p.tienNghi : 'Wi-Fi'}">Wi-Fi</span>
+                                            </span>
+                                        </div>
+
+                                        <div class="ksv-booking-info-stack">
+                                            <span class="ksv-list-free-cancel">
+                                                <i class="fa-solid fa-circle-check"></i>
+                                                Hủy miễn phí trước 24h
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="ksv-list-room-side">
+                                        <div class="ksv-list-rating-box">
+                                            <div>
+                                                <strong th:text="${p.diemTrungBinh >= 9.0 ? 'Xuất sắc' : (p.diemTrungBinh >= 8.0 ? 'Tuyệt hảo' : 'Tốt')}">Tuyệt
+                                                    hảo</strong>
+                                                <span th:text="${p.soLuongDanhGia + ' đánh giá'}">0 đánh giá</span>
+                                            </div>
+                                            <b th:text="${#numbers.formatDecimal(p.diemTrungBinh, 1, 1)}">0.0</b>
+                                        </div>
+
+                                        <div class="ksv-list-price-box">
+                                            <span class="ksv-list-night">
+                                                1 đêm, Tối đa <span th:text="${p.sucChua}">2</span> người lớn
+                                            </span>
+
+                                            <div class="ksv-list-price-row">
+                                                <span class="ksv-list-old-price"
+                                                      th:text="${'VND ' + #numbers.formatDecimal(p.giaPhong * 1.2,0,'POINT',0,'COMMA')}">
+                                                    VND 400.000
+                                                </span>
+
+                                                <strong class="ksv-list-current-price"
+                                                        th:text="${'VND ' + #numbers.formatDecimal(p.giaPhong,0,'POINT',0,'COMMA')}">
+                                                    VND 320.000
+                                                </strong>
+                                            </div>
+
+                                            <span class="ksv-list-tax-note">
+                                                Đã bao gồm thuế và phí
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div th:if="${dsPhong == null or #lists.isEmpty(dsPhong)}" class="empty-box">
+                        Không tìm thấy phòng nào phù hợp.
+                    </div>
+
+                </main>
+            </div>
+        </div>
+    </section>
+    <script th:inline="javascript">
+        function toggleDropdown() {
+            const list = document.getElementById('dropdown-list');
+            list.style.display = list.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function selectOption(sortValue, text) {
+            document.getElementById('selected-text').innerText = text;
+            document.getElementById('dropdown-list').style.display = 'none';
+
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('sortBy', sortValue);
+            window.location.search = urlParams.toString();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sortBy = urlParams.get('sortBy');
+            if (sortBy) {
+                if (sortBy === 'giaTang') document.getElementById('selected-text').innerText = 'Giá: Từ thấp đến cao';
+                if (sortBy === 'giaGiam') document.getElementById('selected-text').innerText = 'Giá: Từ cao đến thấp';
+                if (sortBy === 'diemGiam') document.getElementById('selected-text').innerText = 'Điểm đánh giá cao nhất';
+            }
+
+            window.addEventListener('click', function (e) {
+                if (!document.querySelector('.ksv-custom-dropdown').contains(e.target)) {
+                    document.getElementById('dropdown-list').style.display = 'none';
+                }
+            });
+        });
+    </script>
+</section>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <meta charset="UTF-8">
+    <title>Khám phá KhachSanVui</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="ksv-about-section" id="about" th:fragment="khamPhaSection">
+        <div class="ksv-about-inner">
+            <div class="ksv-about-slider" id="ksvAboutSlider" aria-label="Hình ảnh KhachSanVui">
+                <img src="/images/about/about-lobby.jpg"
+                     alt="Sảnh KhachSanVui"
+                     class="ksv-slide-active">
+                <img src="/images/about/about-room.jpg"
+                     alt="Phòng nghỉ sang trọng">
+                <img src="/images/about/about-spa.jpg"
+                     alt="Khu vực Spa cao cấp">
+                <img src="/images/about/about-pool.jpg"
+                     alt="Hồ bơi vô cực tầng thượng">
+
+                <div class="ksv-about-dots" id="ksvAboutDots" role="tablist"
+                     aria-label="Chọn ảnh"></div>
+            </div>
+
+            <div class="ksv-about-content">
+                <div class="ksv-about-eyebrow" aria-hidden="true">
+                    <div class="ksv-about-eyebrow-line"></div>
+                    <span>
+                        <i class="fa-solid fa-sparkles"></i>
+                        Về chúng tôi
+                    </span>
+                </div>
+
+                <h2 class="ksv-about-heading">
+                    Khám phá KhachSanVui&nbsp;—
+                    <span class="ksv-about-heading-accent">Nơi cảm xúc bắt đầu.</span>
+                </h2>
+
+                <div class="ksv-about-divider" aria-hidden="true"></div>
+
+                <div class="ksv-about-body">
+                    <p>Tại KhachSanVui, chúng tôi tin rằng mỗi chuyến đi không chỉ là những điểm đến,
+                        mà là những trải nghiệm nuôi dưỡng tâm hồn. Tọa lạc tại vị trí đắc địa với
+                        tầm nhìn hướng ra khung cảnh thiên nhiên thơ mộng, KhachSanVui là sự giao thoa
+                        hoàn hảo giữa nét kiến trúc đương đại tinh tế và sự ấm áp của lòng hiếu khách.</p>
+
+                    <p>Từ những sớm mai thức giấc trong không gian tràn ngập ánh nắng, cho đến những
+                        bữa tiệc tối lãng mạn dưới ánh đèn, mọi chi tiết tại đây đều được thiết kế để
+                        mang đến cho bạn sự tĩnh tại tuyệt đối. Hãy để chúng tôi đồng hành cùng bạn,
+                        biến mỗi khoảnh khắc lưu trú thành một ký ức đẹp mãi về sau.</p>
+                </div>
+
+                <div class="ksv-about-stats" aria-label="Thống kê nổi bật">
+                    <div class="ksv-about-stat">
+                        <strong>120+</strong>
+                        <span>Phòng nghỉ</span>
+                    </div>
+                    <div class="ksv-about-stat">
+                        <strong>4.9<i class="fa-solid fa-star ksv-stat-star" aria-hidden="true"></i></strong>
+                        <span>Đánh giá</span>
+                    </div>
+                    <div class="ksv-about-stat">
+                        <strong>15 năm</strong>
+                        <span>Kinh nghiệm</span>
+                    </div>
+                </div>
+
+                <a th:href="@{/phong}" class="ksv-btn-primary ksv-about-cta">
+                    <i class="fa-solid fa-compass" aria-hidden="true"></i>
+                    Khám phá ngay
+                    <i class="fa-solid fa-arrow-right ksv-cta-arrow" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="ksv-page-section ksv-values-section" id="gia-tri-cot-loi"
+             aria-labelledby="values-heading">
+        <div class="ksv-section-inner">
+
+            <div class="ksv-about-section-head">
+                <div class="ksv-eyebrow-wrap" aria-hidden="true">
+                    <div class="ksv-eyebrow-line"></div>
+                    <span class="ksv-eyebrow-text">
+                        <i class="fa-solid fa-gem"></i>
+                        Cam kết của chúng tôi
+                    </span>
+                    <div class="ksv-eyebrow-line"></div>
+                </div>
+                <h2 id="values-heading">Cam kết từ KhachSanVui</h2>
+                <p>Mỗi lần đặt phòng là một lời hứa — chúng tôi luôn đặt trải nghiệm của
+                    bạn lên hàng đầu trong mọi quyết định.</p>
+            </div>
+
+            <div class="ksv-value-grid">
+                <div class="ksv-value-card">
+                    <div class="ksv-value-icon-wrap ksv-icon-heart"
+                         aria-hidden="true">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="ksv-value-text">
+                        <h3>Phục vụ từ trái tim</h3>
+                        <p>Đội ngũ chăm sóc khách hàng hoạt động 24/7, luôn sẵn sàng lắng
+                            nghe và giải quyết mọi yêu cầu với sự nhiệt thành và tận tâm nhất —
+                            dù là yêu cầu lớn hay nhỏ nhất.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Chất lượng -->
+                <div class="ksv-value-card">
+                    <div class="ksv-value-icon-wrap ksv-icon-award"
+                         aria-hidden="true">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <div class="ksv-value-text">
+                        <h3>Tiêu chuẩn quốc tế</h3>
+                        <p>Từ nội thất cao cấp đến tiện nghi hiện đại, mọi phòng nghỉ đều được
+                            thiết kế và vận hành theo chuẩn mực quốc tế, đảm bảo sự thoải mái
+                            và tinh tế tuyệt đối cho từng vị khách.</p>
+                    </div>
+                </div>
+                <div class="ksv-value-card">
+                    <div class="ksv-value-icon-wrap ksv-icon-leaf"
+                         aria-hidden="true">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <div class="ksv-value-text">
+                        <h3>Không gian xanh</h3>
+                        <p>Chúng tôi cam kết xây dựng môi trường nghỉ dưỡng trong lành, thân
+                            thiện với thiên nhiên — nơi bạn có thể hít thở không khí trong sạch
+                            và tái tạo nguồn năng lượng cho chính mình.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <section class="ksv-page-section ksv-team-section" id="doi-ngu"
+             aria-labelledby="team-heading">
+        <div class="ksv-section-inner">
+
+            <div class="ksv-about-section-head">
+                <div class="ksv-eyebrow-wrap" aria-hidden="true">
+                    <div class="ksv-eyebrow-line"></div>
+                    <span class="ksv-eyebrow-text">
+                        <i class="fa-solid fa-users"></i>
+                        Đội ngũ của chúng tôi
+                    </span>
+                    <div class="ksv-eyebrow-line"></div>
+                </div>
+                <h2 id="team-heading">Những gương mặt phía sau trải nghiệm của bạn</h2>
+                <p>Con người là trái tim của KhachSanVui — sự tận tụy của họ tạo nên những
+                    ký ức khó quên cho mỗi vị khách.</p>
+            </div>
+
+            <div class="ksv-team-grid">
+                <article class="ksv-team-card">
+                    <div class="ksv-team-photo">
+                        <img src="/images/team/hotel-ceo.jpg"
+                             onerror="this.src='https://ui-avatars.com/api/?name=Nguyen+Minh+Khoa&size=400&background=061f58&color=f2b731&bold=true&font-size=0.33'"
+                             alt="Nguyễn Minh Khoa — Giám đốc điều hành">
+                        <span class="ksv-team-role-badge">Giám đốc điều hành</span>
+                    </div>
+                    <div class="ksv-team-body">
+                        <strong>Nguyễn Minh Khoa</strong>
+                        <span class="ksv-team-role-text">General Manager</span>
+                        <div class="ksv-team-divider" aria-hidden="true"></div>
+                        <blockquote>"Mỗi vị khách là một câu chuyện —
+                            chúng tôi viết nên những trang đẹp nhất cùng bạn."
+                        </blockquote>
+                    </div>
+                </article>
+                <article class="ksv-team-card">
+                    <div class="ksv-team-photo">
+                        <img src="/images/team/hotel-chef.jpg"
+                             onerror="this.src='https://ui-avatars.com/api/?name=Tran+Anh+Hoang&size=400&background=061f58&color=f2b731&bold=true&font-size=0.33'"
+                             alt="Trần Anh Hoàng — Bếp trưởng">
+                        <span class="ksv-team-role-badge">Bếp trưởng</span>
+                    </div>
+                    <div class="ksv-team-body">
+                        <strong>Trần Anh Hoàng</strong>
+                        <span class="ksv-team-role-text">Executive Chef</span>
+                        <div class="ksv-team-divider" aria-hidden="true"></div>
+                        <blockquote>"Ẩm thực không chỉ là món ăn — đó là cách chúng tôi
+                            nói lên tình yêu với từng thực khách."
+                        </blockquote>
+                    </div>
+                </article>
+
+                <article class="ksv-team-card">
+                    <div class="ksv-team-photo">
+                        <img src="/images/team/hotel-hr.jpg"
+                             onerror="this.src='https://ui-avatars.com/api/?name=Le+Thu+Ha&size=400&background=061f58&color=f2b731&bold=true&font-size=0.33'"
+                             alt="Lê Thu Hà — Trưởng bộ phận chăm sóc khách hàng">
+                        <span class="ksv-team-role-badge">Chăm sóc khách hàng</span>
+                    </div>
+                    <div class="ksv-team-body">
+                        <strong>Lê Thu Hà</strong>
+                        <span class="ksv-team-role-text">Guest Relations Manager</span>
+                        <div class="ksv-team-divider" aria-hidden="true"></div>
+                        <blockquote>"Nụ cười của bạn khi rời đi chính là phần thưởng
+                            lớn nhất trong công việc của tôi."
+                        </blockquote>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+</section>
+<th:block layout:fragment="additional-scripts">
+    <script th:src="@{/js/main.js}"></script>
+</th:block>
+</body>
+</html>

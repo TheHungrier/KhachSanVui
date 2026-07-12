@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title>Quản lý chi nhánh khách sạn</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-page-header">
+        <div class="ksv-page-title">
+            <h1>Quản lý chi nhánh khách sạn</h1>
+            <p>Danh mục quản lý các cơ sở, vị trí địa lý tọa độ và tình trạng hoạt động chuỗi hệ thống.</p>
+        </div>
+        <a class="ksv-btn-add" th:href="@{/chi-nhanh/admin/them}">
+            <i class="fa-solid fa-map-location-dot"></i> Thêm chi nhánh mới
+        </a>
+    </div>
+
+    <div th:if="${success}" class="ksv-alert ksv-alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span th:text="${success}"></span>
+    </div>
+    <div th:if="${error}" class="ksv-alert ksv-alert-error">
+        <i class="fa-solid fa-circle-xmark"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:action="@{/chi-nhanh/admin}" method="get" class="ksv-filter-card" id="filterForm">
+        <div class="ksv-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="keyword" th:value="${keyword}" class="ksv-search-input"
+                   placeholder="Tìm nhanh theo tên cơ sở chi nhánh, vị trí địa chỉ...">
+        </div>
+
+        <select class="ksv-filter-select" name="sortBy" onchange="document.getElementById('filterForm').submit()"
+                aria-label="Sắp xếp chi nhánh">
+            <option value="" th:selected="${sortBy == null || sortBy == ''}">Sắp xếp mặc định</option>
+            <option value="az" th:selected="${sortBy == 'az'}">Tên chi nhánh: A đến Z</option>
+            <option value="za" th:selected="${sortBy == 'za'}">Tên chi nhánh: Z đến A</option>
+            <option value="" th:selected="${sortBy == null || sortBy == ''}">Sắp xếp theo mã cơ sở</option>
+            <option value="id-asc" th:selected="${sortBy == 'id-asc'}">Mã chi nhánh: Tăng dần</option>
+            <option value="id-desc" th:selected="${sortBy == 'id-desc'}">Mã chi nhánh: Giảm dần</option>
+        </select>
+    </form>
+
+    <div class="ksv-table-card">
+        <table class="ksv-data-table">
+            <thead>
+            <tr>
+                <th style="width: 100px;">Mã cơ sở</th>
+                <th>Tên cơ sở chi nhánh</th>
+                <th>Địa chỉ vị trí</th>
+                <th>Tọa độ bản đồ</th>
+                <th>Trạng thái hiển thị</th>
+                <th style="width: 100px; text-align: center;">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cn : ${dsChiNhanh}">
+                <td><span class="ksv-cn-id" th:text="${'#CN-' + cn.maChiNhanh}"></span></td>
+                <td><span class="ksv-cn-name" th:text="${cn.tenChiNhanh}"></span></td>
+                <td th:text="${cn.diaChi != null ? cn.diaChi : '───'}"></td>
+                <td th:text="${cn.viDo != null and cn.kinhDo != null ? cn.viDo + ', ' + cn.kinhDo : 'Chưa định vị'}"></td>
+                <td>
+                    <span class="ksv-status-pill"
+                          th:text="${cn.trangThai}"
+                          th:classappend="${cn.trangThai == 'Hiển thị' || cn.trangThai == 'Kích hoạt' ? 'ksv-status-active' : 'ksv-status-inactive'}">
+                    </span>
+                </td>
+                <td>
+                    <div class="ksv-action-btn-group">
+                        <a class="ksv-action-btn ksv-action-edit"
+                           th:href="@{/chi-nhanh/admin/sua/{id}(id=${cn.maChiNhanh})}" title="Chỉnh sửa chi nhánh">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <form th:action="@{/chi-nhanh/admin/xoa/{id}(id=${cn.maChiNhanh})}" method="post"
+                              onsubmit="return confirm('Xác nhận xóa vĩnh viễn chi nhánh cơ sở này?')">
+                            <button type="submit" class="ksv-action-btn ksv-action-delete" title="Xóa cơ sở">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(dsChiNhanh)}" class="ksv-empty-box">
+            <i class="fa-solid fa-folder-open"
+               style="font-size: 32px; color: var(--border); display: block; margin-bottom: 12px;"></i>
+            Hệ thống dữ liệu cơ sở chuỗi chi nhánh hiện tại trống.
+        </div>
+
+        <div th:if="${pageData.totalPages > 1}" class="ksv-pagination-bar">
+            <div class="ksv-pagination-info"
+                 th:text="${'Hiển thị trang ' + pageData.currentPage + ' / ' + pageData.totalPages + ' (Tổng số ' + pageData.totalElements + ' chi nhánh)'}">
+                Hiển thị dữ liệu thực tế hệ thống PMS
+            </div>
+            <div class="ksv-pagination-controls">
+                <a th:href="@{/chi-nhanh/admin(page=${pageData.currentPage - 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasPrevious} ? 'disabled' : ''"
+                   th:style="${!pageData.hasPrevious} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
+
+                <span th:each="i : ${#numbers.sequence(1, pageData.totalPages)}">
+                    <a th:href="@{/chi-nhanh/admin(page=${i}, keyword=${keyword}, sortBy=${sortBy})}"
+                       th:text="${i}"
+                       class="ksv-page-btn"
+                       th:classappend="${i == pageData.currentPage} ? 'active' : ''">
+                    </a>
+                </span>
+
+                <a th:href="@{/chi-nhanh/admin(page=${pageData.currentPage + 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasNext} ? 'disabled' : ''"
+                   th:style="${!pageData.hasNext} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

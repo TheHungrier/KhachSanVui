@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title>Quản lý dịch vụ</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-page-header">
+        <div class="ksv-page-title">
+            <h1>Quản lý dịch vụ</h1>
+            <p>Danh sách danh mục các gói dịch vụ, ẩm thực tiện ích phát sinh hỗ trợ vận hành lưu trú khách sạn.</p>
+        </div>
+        <a class="ksv-btn-add" th:href="@{/dich-vu/admin/them}">
+            <i class="fa-solid fa-plus"></i> Thêm dịch vụ mới
+        </a>
+    </div>
+
+    <div th:if="${success}" class="ksv-alert ksv-alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span th:text="${success}"></span>
+    </div>
+    <div th:if="${error}" class="ksv-alert ksv-alert-error">
+        <i class="fa-solid fa-circle-xmark"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:action="@{/dich-vu/admin}" method="get" class="ksv-filter-card" id="filterForm">
+        <div class="ksv-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="keyword" th:value="${keyword}" class="ksv-search-input"
+                   placeholder="Tìm kiếm nhanh tên dịch vụ, loại danh mục, đơn giá...">
+        </div>
+
+        <select class="ksv-filter-select" name="sortBy" onchange="document.getElementById('filterForm').submit()"
+                aria-label="Sắp xếp dịch vụ">
+            <option value="" th:selected="${sortBy == null || sortBy == ''}">Sắp xếp mặc định</option>
+            <option value="az" th:selected="${sortBy == 'az'}">Tên dịch vụ: A đến Z</option>
+            <option value="za" th:selected="${sortBy == 'za'}">Tên dịch vụ: Z đến A</option>
+            <option value="id-asc" th:selected="${sortBy == 'id-asc'}">Mã dịch vụ: Tăng dần</option>
+            <option value="id-desc" th:selected="${sortBy == 'id-desc'}">Mã dịch vụ: Giảm dần</option>
+        </select>
+    </form>
+
+    <div class="ksv-table-card">
+        <table class="ksv-data-table">
+            <thead>
+            <tr>
+                <th style="width: 80px;">Mã số</th>
+                <th style="width: 80px;">Hình ảnh</th>
+                <th>Tên dịch vụ</th>
+                <th>Phân loại dịch vụ</th>
+                <th>Đơn giá niêm yết</th>
+                <th>Trạng thái hành chính</th>
+                <th style="width: 100px; text-align: center;">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="dv : ${dsDichVu}">
+                <td><span class="ksv-service-id" th:text="${'#DV-' + dv.maDichVu}"></span></td>
+                <td>
+                    <img th:src="${dv.hinhAnh != null && !dv.hinhAnh.isBlank() ? '/images/avatars/' + dv.hinhAnh : '/images/avatars/service-default.jpg'}"
+                         class="ksv-service-image" alt="hình dịch vụ">
+                </td>
+                <td><span class="ksv-service-name" th:text="${dv.tenDichVu}"></span></td>
+                <td th:text="${dv.loaiDichVu}"></td>
+                <td><span class="ksv-service-price"
+                          th:text="${#numbers.formatDecimal(dv.donGia,0,'COMMA',0,'POINT') + ' ₫'}"></span></td>
+                <td>
+                    <span class="ksv-status-pill"
+                          th:text="${dv.trangThai}"
+                          th:classappend="${dv.trangThai == 'Đang kinh doanh' || dv.trangThai == 'Kích hoạt' || dv.trangThai == 'Khả dụng' ? 'ksv-status-active' : 'ksv-status-inactive'}">
+                    </span>
+                </td>
+                <td>
+                    <div class="ksv-action-btn-group">
+                        <a class="ksv-action-btn ksv-action-edit"
+                           th:href="@{/dich-vu/admin/sua/{id}(id=${dv.maDichVu})}" title="Chỉnh sửa cấu hình">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <form th:action="@{/dich-vu/admin/xoa/{id}(id=${dv.maDichVu})}" method="post"
+                              onsubmit="return confirm('Hệ thống sẽ gỡ bỏ danh mục kinh doanh này. Xác nhận xóa dịch vụ?')">
+                            <button type="submit" class="ksv-action-btn ksv-action-delete" title="Xóa danh mục">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(dsDichVu)}" class="ksv-empty-box">
+            <i class="fa-solid fa-folder-open"
+               style="font-size: 32px; color: var(--border); display: block; margin-bottom: 12px;"></i>
+            Cơ sở dữ liệu danh mục tiện ích hiện tại trống. Vui lòng bấm nút thêm mới để ghi nhận thông tin.
+        </div>
+
+        <div th:if="${pageData.totalPages > 1}" class="ksv-pagination-bar">
+            <div class="ksv-pagination-info"
+                 th:text="${'Hiển thị trang ' + pageData.currentPage + ' / ' + pageData.totalPages + ' (Tổng số ' + pageData.totalElements + ' dịch vụ)'}">
+                Hiển thị dữ liệu thực tế hệ thống PMS
+            </div>
+            <div class="ksv-pagination-controls">
+                <a th:href="@{/dich-vu/admin(page=${pageData.currentPage - 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasPrevious} ? 'disabled' : ''"
+                   th:style="${!pageData.hasPrevious} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
+
+                <span th:each="i : ${#numbers.sequence(1, pageData.totalPages)}">
+                    <a th:href="@{/dich-vu/admin(page=${i}, keyword=${keyword}, sortBy=${sortBy})}"
+                       th:text="${i}"
+                       class="ksv-page-btn"
+                       th:classappend="${i == pageData.currentPage} ? 'active' : ''">
+                    </a>
+                </span>
+
+                <a th:href="@{/dich-vu/admin(page=${pageData.currentPage + 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasNext} ? 'disabled' : ''"
+                   th:style="${!pageData.hasNext} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

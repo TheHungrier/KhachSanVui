@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title>Thủ tục nhận phòng</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-form-container">
+        <div class="ksv-form-header">
+            <div class="ksv-form-header-title">
+                <h1>Thủ tục nhận phòng (Check-in)</h1>
+                <p>Khởi tạo hồ sơ lưu trú thực tế, liên kết đơn đặt trước hoặc tiếp nhận khách vãng lai trực tiếp vào
+                    buồng phòng.</p>
+            </div>
+            <a class="ksv-btn-back" th:href="@{/luu-tru/admin}">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại quản lý
+            </a>
+        </div>
+
+        <form th:action="@{/luu-tru/admin/nhan-phong}" method="post">
+            <div class="ksv-form-grid">
+                <div class="ksv-form-group full-width">
+                    <label>Liên kết phiếu đặt phòng trước (Nếu có)</label>
+                    <select class="ksv-form-select" name="maDatPhong"
+                            style="border-color: var(--royal); font-weight: 500;">
+                        <option value="">Khách vãng lai đến trực tiếp (Không sử dụng đơn đặt trước)</option>
+                        <option th:each="dp : ${dsDatPhong}"
+                                th:value="${dp.maDatPhong}"
+                                th:text="${'Đơn #' + dp.maDatPhong + ' ── Khách: ' + (dp.khachHang != null ? dp.khachHang.hoTen : 'Chưa rõ') + ' ── Kế hoạch: ' + (dp.ngayNhan != null ? #temporals.format(dp.ngayNhan,'dd/MM/yyyy') : '') + ' đến ' + (dp.ngayTra != null ? #temporals.format(dp.ngayTra,'dd/MM/yyyy') : '')}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Xác định hồ sơ danh tính khách hàng</label>
+                    <select class="ksv-form-select" name="maKH" required>
+                        <option value="">-- Lựa chọn tài khoản khách hàng --</option>
+                        <option th:each="kh : ${dsKhachHang}" th:value="${kh.maKH}"
+                                th:text="${kh.hoTen + ' ── SĐT: ' + kh.soDienThoai}"></option>
+                    </select>
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Chỉ định buồng phòng trống khả dụng</label>
+                    <select class="ksv-form-select" name="maPhong" required>
+                        <option value="">-- Lựa chọn phòng trống hiện tại --</option>
+                        <option th:each="p : ${dsPhong}" th:value="${p.maPhong}"
+                                th:text="${'Phòng số: ' + p.soPhong + ' ── Phân loại: ' + p.getTenLoaiPhong()}"></option>
+                    </select>
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Thời gian nhận phòng thực tế (Check-in)</label>
+                    <input class="ksv-form-input" type="datetime-local" name="gioNhanPhong" id="gioNhanPhong" required
+                           th:value="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}">
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Thời gian trả phòng dự kiến (Check-out)</label>
+                    <input class="ksv-form-input" type="datetime-local" name="gioTraPhong" id="gioTraPhong" required
+                           th:value="${#temporals.format(#temporals.createNow().plusDays(1), 'yyyy-MM-dd''T''12:00')}">
+                </div>
+            </div>
+
+            <div class="ksv-form-actions">
+                <button type="submit" class="ksv-btn-execute">
+                    <i class="fa-solid fa-key"></i> Xác thực cấp quyền & Giao chìa khóa phòng
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const gioNhan = document.getElementById('gioNhanPhong');
+            const gioTra = document.getElementById('gioTraPhong');
+
+            gioNhan.addEventListener('change', function () {
+                if (gioNhan.value) {
+                    let dateNhan = new Date(gioNhan.value);
+                    dateNhan.setDate(dateNhan.getDate() + 1);
+                    dateNhan.setHours(12, 0, 0, 0);
+
+                    let tzoffset = dateNhan.getTimezoneOffset() * 60000;
+                    let localISOTime = (new Date(dateNhan.getTime() - tzoffset)).toISOString().slice(0, 16);
+                    gioTra.value = localISOTime;
+                }
+            });
+        });
+    </script>
+</section>
+</body>
+</html>

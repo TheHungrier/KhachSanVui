@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title>Quản lý nhân viên</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-page-header">
+        <div class="ksv-page-title">
+            <h1>Quản lý nhân viên</h1>
+            <p>Hồ sơ nhân sự, thông tin điều phối phân quyền lễ tân và điều hành lịch trực hệ thống.</p>
+        </div>
+        <a class="ksv-btn-add" th:href="@{/nhan-vien/admin/them}">
+            <i class="fa-solid fa-user-plus"></i> Thêm nhân viên mới
+        </a>
+    </div>
+
+    <div th:if="${success}" class="ksv-alert ksv-alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span th:text="${success}"></span>
+    </div>
+    <div th:if="${error}" class="ksv-alert ksv-alert-error">
+        <i class="fa-solid fa-circle-xmark"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:action="@{/nhan-vien/admin}" method="get" class="ksv-filter-card" id="filterForm">
+        <div class="ksv-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="keyword" th:value="${keyword}" class="ksv-search-input"
+                   placeholder="Tìm kiếm họ tên, số điện thoại, mã định danh nhân viên...">
+        </div>
+
+        <select class="ksv-filter-select" name="sortBy" onchange="document.getElementById('filterForm').submit()" aria-label="Sắp xếp nhân viên">
+            <option value="" th:selected="${sortBy == null || sortBy == ''}">Sắp xếp mặc định</option>
+            <option value="az" th:selected="${sortBy == 'az'}">Họ và tên: A đến Z</option>
+            <option value="za" th:selected="${sortBy == 'za'}">Họ và tên: Z đến A</option>
+            <option value="id-asc" th:selected="${sortBy == 'id-asc'}">Mã nhân viên: Tăng dần</option>
+            <option value="id-desc" th:selected="${sortBy == 'id-desc'}">Mã nhân viên: Giảm dần</option>
+        </select>
+    </form>
+
+    <div class="ksv-table-card">
+        <table class="ksv-data-table">
+            <thead>
+            <tr>
+                <th style="width: 80px;">Mã số</th>
+                <th style="width: 70px;">Hồ sơ</th>
+                <th>Họ và tên</th>
+                <th style="width: 100px;">Giới tính</th>
+                <th>Số điện thoại</th>
+                <th>Thư điện tử</th>
+                <th>Chức vụ</th>
+                <th>Trạng thái</th>
+                <th style="width: 100px; text-align: center;">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="nv : ${dsNhanVien}">
+                <td><span class="ksv-emp-id" th:text="${'#NV-' + nv.maNV}"></span></td>
+                <td style="text-align: center; vertical-align: middle;">
+                    <img th:if="${nv.hinhAnh != null and !nv.hinhAnh.isBlank()}"
+                         th:src="@{'/uploads/avatars/' + ${nv.hinhAnh}}"
+                         alt="Avatar" class="ksv-avatar-sm">
+                    <div th:unless="${nv.hinhAnh != null and !nv.hinhAnh.isBlank()}" class="ksv-avatar-default">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </td>
+                <td><span class="ksv-emp-name" th:text="${nv.hoTen}"></span></td>
+                <td th:text="${nv.gioiTinh}"></td>
+                <td th:text="${nv.soDienThoai}"></td>
+                <td th:text="${nv.email}"></td>
+                <td th:text="${nv.chucVu}"></td>
+                <td>
+                    <span class="ksv-status-pill"
+                          th:text="${nv.trangThai}"
+                          th:classappend="${nv.trangThai == 'Đang làm việc' || nv.trangThai == 'Kích hoạt' ? 'ksv-status-active' : 'ksv-status-inactive'}">
+                    </span>
+                </td>
+                <td>
+                    <div class="ksv-action-btn-group">
+                        <a class="ksv-action-btn ksv-action-edit" th:href="@{/nhan-vien/admin/sua/{id}(id=${nv.maNV})}"
+                           title="Chỉnh sửa hồ sơ">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <form th:action="@{/nhan-vien/admin/xoa/{id}(id=${nv.maNV})}" method="post"
+                              onsubmit="return confirm('Hệ thống sẽ vô hiệu hóa tài khoản liên kết. Xác nhận xóa nhân viên này?')">
+                            <button type="submit" class="ksv-action-btn ksv-action-delete" title="Xóa nhân sự">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(dsNhanVien)}" class="ksv-empty-box">
+            <i class="fa-solid fa-folder-open"
+               style="font-size: 32px; color: var(--border); display: block; margin-bottom: 12px;"></i>
+            Cơ sở dữ liệu nhân sự hiện tại trống. Vui lòng bấm nút thêm mới để ghi nhận thông tin.
+        </div>
+
+        <div th:if="${pageData.totalPages > 1}" class="ksv-pagination-bar">
+            <div class="ksv-pagination-info" th:text="${'Hiển thị trang ' + pageData.currentPage + ' / ' + pageData.totalPages + ' (Tổng số ' + pageData.totalElements + ' dòng)'}">
+                Hiển thị dữ liệu thực tế hệ thống PMS
+            </div>
+            <div class="ksv-pagination-controls">
+                <a th:href="@{/nhan-vien/admin(page=${pageData.currentPage - 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasPrevious} ? 'disabled' : ''"
+                   th:style="${!pageData.hasPrevious} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
+
+                <span th:each="i : ${#numbers.sequence(1, pageData.totalPages)}">
+                    <a th:href="@{/nhan-vien/admin(page=${i}, keyword=${keyword}, sortBy=${sortBy})}"
+                       th:text="${i}"
+                       class="ksv-page-btn"
+                       th:classappend="${i == pageData.currentPage} ? 'active' : ''">
+                    </a>
+                </span>
+
+                <a th:href="@{/nhan-vien/admin(page=${pageData.currentPage + 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasNext} ? 'disabled' : ''"
+                   th:style="${!pageData.hasNext} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

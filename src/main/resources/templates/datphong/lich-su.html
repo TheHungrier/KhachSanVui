@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Lịch sử đặt phòng</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <section class="ksv-booking-section">
+        <div class="ksv-booking-container">
+            <div class="ksv-booking-header">
+                <div>
+                    <h2>
+                        <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+                        Lịch sử đặt phòng
+                    </h2>
+                    <p>Xem lại các kỳ nghỉ tuyệt vời và cập nhật trạng thái đơn đặt phòng của bạn.</p>
+                </div>
+            </div>
+
+            <div class="ksv-bk-empty" th:if="${#lists.isEmpty(dsDatPhong)}">
+                <i class="fa-solid fa-calendar-xmark" aria-hidden="true"></i>
+                <h3>Bạn chưa có đơn đặt phòng nào</h3>
+                <p>Hãy khám phá các phòng nghỉ tuyệt vời và bắt đầu hành trình của bạn.</p>
+                <a th:href="@{/}" class="ksv-bk-btn-primary">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    Khám phá phòng ngay
+                </a>
+            </div>
+
+            <div class="ksv-bk-list" th:unless="${#lists.isEmpty(dsDatPhong)}">
+
+                <article th:each="d : ${dsDatPhong}" th:with="firstCt=${(d.chiTietDatPhongs != null and d.chiTietDatPhongs.size() > 0) ? d.chiTietDatPhongs.iterator().next() : null}" class="ksv-bk-card">
+
+                    <div class="ksv-bk-thumb"
+                                         th:classappend="${firstCt != null and firstCt.phong != null and firstCt.phong.hinhAnhHienThi != null} ? 'ksv-bk-thumb--has-image' : 'ksv-bk-thumb--has-icon'">
+
+                        <th:block
+                                th:if="${firstCt != null and firstCt.phong != null and firstCt.phong.hinhAnhHienThi != null}">
+                            <img th:src="@{'/images/rooms/' + ${firstCt.phong.hinhAnhHienThi}}"
+                                 th:alt="${firstCt.phong.getTenLoaiPhong()}"
+                                 class="ksv-bk-room-img"
+                                 aria-hidden="true"/>
+                        </th:block>
+
+                        <th:block
+                                th:unless="${firstCt != null and firstCt.phong != null and firstCt.phong.hinhAnhHienThi != null}">
+                            <div class="ksv-bk-icon-wrapper">
+                                <i class="fa-solid fa-hotel" aria-hidden="true"></i>
+                            </div>
+                        </th:block>
+                    </div>
+
+                    <div class="ksv-bk-info">
+                        <div class="ksv-bk-info-top">
+                            <span class="ksv-bk-room-name"
+                                  th:text="${firstCt != null and firstCt.phong != null ? firstCt.phong.getTenLoaiPhong() + ' ' + firstCt.phong.soPhong : 'Phòng nghỉ KhachSanVui'}">
+                                Phòng Deluxe View Biển
+                            </span>
+
+                            <span class="ksv-bk-badge"
+                                  th:text="${d.trangThai}"
+                                  th:classappend="
+                                      ${d.trangThai == 'Chờ xác nhận'} ? 'badge-pending' :
+                                      (${d.trangThai == 'Đã xác nhận'} ? 'badge-confirmed' :
+                                      (${d.trangThai == 'Đã nhận phòng'} ? 'badge-checkin' :
+                                      (${d.trangThai == 'Đã hoàn thành'} ? 'badge-done' :
+                                      (${d.trangThai == 'Đã hủy'} ? 'badge-cancelled' : 'badge-pending'))))">
+                                Trạng thái
+                            </span>
+                        </div>
+
+                        <div class="ksv-bk-meta">
+                            <span class="ksv-bk-meta-item">
+                                <i class="fa-regular fa-calendar-check" aria-hidden="true"></i>
+                                <span th:text="${#temporals.format(d.ngayNhan, 'dd/MM/yyyy')}">15/06/2026</span>
+                                <i class="fa-solid fa-arrow-right" style="font-size:9px" aria-hidden="true"></i>
+                                <span th:text="${#temporals.format(d.ngayTra, 'dd/MM/yyyy')}">18/06/2026</span>
+                            </span>
+                            <span class="ksv-bk-meta-item">
+                                <i class="fa-solid fa-moon" aria-hidden="true"></i>
+                                <span th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(d.ngayNhan, d.ngayTra)} + ' đêm'">
+                                    3 đêm
+                                </span>
+                            </span>
+                            <span class="ksv-bk-meta-item">
+                                <i class="fa-solid fa-user-group" aria-hidden="true"></i>
+                                <span th:text="${d.soLuongKhach} + ' khách'">2 khách</span>
+                            </span>
+                            <span class="ksv-bk-meta-item">
+                                <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                                Đặt lúc <span th:text="${#temporals.format(d.ngayDat, 'dd/MM/yyyy HH:mm')}">08/06/2026 09:30</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="ksv-bk-right">
+                        <div class="ksv-bk-price-block">
+                            <span class="ksv-bk-price"
+                                  th:classappend="${d.trangThai == 'Đã hủy'} ? 'ksv-bk-price--cancelled'"
+                                  th:text="${#numbers.formatDecimal((hoaDonMap[d.maDatPhong] != null ? hoaDonMap[d.maDatPhong].tongTien : 0), 0, 'POINT', 0, 'COMMA')} + ' ₫'">
+                                3.600.000 ₫
+                            </span>
+                            <span class="ksv-bk-order-id"
+                                  th:text="'#DP-' + ${d.maDatPhong}">
+                                #DP-1001
+                            </span>
+                        </div>
+                        <a th:href="@{/dat-phong/{id}(id=${d.maDatPhong})}"
+                           class="ksv-bk-btn-detail">
+                            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                            Xem chi tiết
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+</section>
+</body>
+</html>

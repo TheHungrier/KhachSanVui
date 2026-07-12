@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title th:text="${formTitle}">Biểu mẫu loại phòng nghỉ</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-form-container">
+        <div class="ksv-form-header">
+            <div class="ksv-form-header-title">
+                <h1 th:text="${formTitle}">Biểu mẫu loại phòng</h1>
+                <p>Thiết lập thông số định danh nhóm phân loại phòng nghỉ và định biên sức chứa tiêu chuẩn buồng
+                    phòng.</p>
+            </div>
+            <a class="ksv-btn-back" th:href="@{/loai-phong/admin}">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+            </a>
+        </div>
+
+        <form th:action="@{/loai-phong/admin/luu}" th:object="${loaiPhong}" method="post">
+            <div th:if="${error}" class="ksv-alert">
+                <i class="fa-solid fa-circle-xmark"></i>
+                <span th:text="${error}"></span>
+            </div>
+
+            <input type="hidden" th:field="*{maLoaiPhong}">
+
+            <div class="ksv-form-grid">
+                <div class="ksv-form-group">
+                    <label>Tên danh mục loại phòng nghỉ</label>
+                    <input class="ksv-form-input" th:field="*{tenLoaiPhong}"
+                           placeholder="Ví dụ: Phòng Deluxe Giường Đôi, Phòng Tổng Thống (Presidential)..." required
+                           maxlength="100">
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Sức chứa định biên tiêu chuẩn (Người / Phòng)</label>
+                    <input class="ksv-form-input" th:field="*{sucChua}" type="number" min="1"
+                           placeholder="Nhập số lượng người ở tiêu chuẩn..." required>
+                </div>
+
+                <div class="ksv-form-group full-width">
+                    <label>Trạng thái phân phối buồng phòng nghỉ</label>
+                    <select class="ksv-form-select" th:field="*{trangThai}">
+                        <option value="Đang sử dụng">Đang khai thác sử dụng</option>
+                        <option value="Ngừng sử dụng">Tạm hoãn ngừng cung cấp</option>
+                    </select>
+                </div>
+
+                <div class="ksv-form-group full-width">
+                    <label>Mô tả quy cách kiến trúc thiết kế chi tiết loại phòng nghỉ</label>
+                    <textarea class="ksv-form-textarea" th:field="*{moTa}" rows="4"
+                              placeholder="Nhập tóm tắt cấu trúc không gian diện tích giường, view hướng ban công thiết kế nội thất buồng phòng..."
+                              maxlength="500"></textarea>
+                </div>
+            </div>
+
+            <div class="ksv-form-actions">
+                <button class="ksv-btn-save" type="submit">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu cấu trúc loại phòng
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>

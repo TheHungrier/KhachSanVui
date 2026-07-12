@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title th:text="${formTitle}">Biểu mẫu cấu hình phòng</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-form-container">
+        <div class="ksv-form-header">
+            <div class="ksv-form-header-title">
+                <h1 th:text="${formTitle}">Biểu mẫu phòng nghỉ</h1>
+                <p>Thiết lập chi tiết thông số vận hành hạ tầng phòng nghỉ, giá thành và tiện ích buồng phòng.</p>
+            </div>
+            <a class="ksv-btn-back" th:href="@{/phong/admin}">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+            </a>
+        </div>
+
+        <form th:action="@{/phong/admin/luu}" th:object="${dto}" method="post" enctype="multipart/form-data">
+            <div th:if="${error}" class="ksv-alert">
+                <i class="fa-solid fa-circle-xmark"></i>
+                <span th:text="${error}"></span>
+            </div>
+
+            <input type="hidden" th:field="*{maPhong}">
+            <input type="hidden" th:field="*{hinhAnh}">
+
+            <div class="ksv-form-grid">
+                <div class="ksv-form-group">
+                    <label>Số hiệu phòng nghỉ</label>
+                    <input class="ksv-form-input" th:field="*{soPhong}" placeholder="Ví dụ: P.301, P.405..." required
+                           maxlength="20">
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Cơ sở chi nhánh khách sạn</label>
+                    <select class="ksv-form-select" th:field="*{maChiNhanh}" required>
+                        <option value="">Cấu hình chọn chi nhánh</option>
+                        <option th:each="cn : ${dsChiNhanh}" th:value="${cn.maChiNhanh}"
+                                th:text="${cn.tenChiNhanh}"></option>
+                    </select>
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Phân loại phòng nghỉ</label>
+                    <select class="ksv-form-select" th:field="*{maLoaiPhong}" required>
+                        <option value="">Cấu hình chọn phân loại</option>
+                        <option th:each="lp : ${dsLoaiPhong}" th:value="${lp.maLoaiPhong}"
+                                th:text="${lp.tenLoaiPhong}"></option>
+                    </select>
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Giá niêm yết thuê phòng (₫ / Đêm)</label>
+                    <input class="ksv-form-input" th:field="*{giaPhong}" type="number" min="0"
+                           placeholder="Nhập số tiền thực tế..." required>
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Sức chứa tiêu chuẩn (Người)</label>
+                    <input class="ksv-form-input" th:field="*{sucChua}" type="number" min="1"
+                           placeholder="Số lượng khách..." required>
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Diện tích không gian phòng (m²)</label>
+                    <input class="ksv-form-input" th:field="*{dienTich}" type="number" min="0"
+                           placeholder="Số mét vuông phòng...">
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Trạng thái hành chính phòng nghỉ</label>
+                    <select class="ksv-form-select" th:field="*{trangThai}">
+                        <option value="Trống">Trống (Khả dụng phục vụ)</option>
+                        <option value="Đã đặt">Đã đặt trước (Bảo lưu giữ phòng)</option>
+                        <option value="Đang sử dụng">Đang sử dụng (Đang có khách ở)</option>
+                        <option value="Bảo trì">Bảo trì (Tạm dừng đón khách)</option>
+                    </select>
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Tải album ảnh thực tế phòng (Được chọn nhiều file)</label>
+                    <input type="file" name="filesAnh" id="ksvRoomFiles" accept="image/*" multiple
+                           class="ksv-form-file">
+                </div>
+
+                <div class="ksv-form-group full-width">
+                    <label>Hệ thống thiết bị & Tiện nghi đi kèm buồng phòng</label>
+                    <input class="ksv-form-input" th:field="*{tienNghi}"
+                           placeholder="Ví dụ: Điều hòa, SmartTV 4K, Tủ lạnh mini, Bồn tắm đứng, Wifi 5G tốc độ cao..."
+                           maxlength="500">
+                </div>
+
+                <div class="ksv-form-group full-width">
+                    <label>Mô tả chi tiết đặc điểm phòng nghỉ</label>
+                    <textarea class="ksv-form-textarea" th:field="*{moTa}" rows="4"
+                              placeholder="Nhập thông tin giới thiệu chi tiết về hướng nhìn ban bần, cấu trúc thiết kế hoặc các thông tin đặc thù khác của phòng..."
+                              maxlength="1000"></textarea>
+                </div>
+            </div>
+
+            <div class="ksv-form-actions">
+                <button class="ksv-btn-save" type="submit">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu trữ cấu hình dữ liệu
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>

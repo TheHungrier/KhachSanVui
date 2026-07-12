@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title>Quản lý hồ sơ lưu trú buồng phòng</title>
+    <link rel="stylesheet" th:href="@{/css/admin-styles.css}">
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-page-header">
+        <div class="ksv-page-title">
+            <h1>Quản lý lưu trú</h1>
+            <p>Giám sát danh sách hồ sơ khách hàng đang lưu trú thực tế, điều phối thủ tục nhận phòng và quyết toán trả phòng.</p>
+        </div>
+        <div class="ksv-header-actions">
+            <a class="ksv-btn-nav active" th:href="@{/luu-tru/admin}">
+                <i class="fa-solid fa-list-bullet"></i> Tất cả hồ sơ lưu trú
+            </a>
+            <a class="ksv-btn-action-primary" th:href="@{/luu-tru/admin/nhan-phong}">
+                <i class="fa-solid fa-key"></i> Tiếp nhận Check-in mới
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${success}" class="ksv-alert ksv-alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span th:text="${success}"></span>
+    </div>
+    <div th:if="${error}" class="ksv-alert ksv-alert-error">
+        <i class="fa-solid fa-circle-xmark"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:action="@{/luu-tru/admin}" method="get" class="ksv-filter-card" id="filterForm">
+        <div class="ksv-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="keyword" th:value="${keyword}" class="ksv-search-input"
+                   placeholder="Tìm nhanh theo tên khách hàng, số buồng phòng, mã vận hành...">
+        </div>
+        <select class="ksv-filter-select" name="sortBy" onchange="document.getElementById('filterForm').submit()" aria-label="Lọc theo trạng thái">
+            <option value="" th:selected="${sortBy == null || sortBy == ''}">Tất cả trạng thái hồ sơ</option>
+            <option value="Đang lưu trú" th:selected="${sortBy == 'Đang lưu trú'}">Đang lưu trú tại phòng</option>
+            <option value="Đã trả phòng" th:selected="${sortBy == 'Đã trả phòng'}">Đã làm thủ tục trả phòng</option>
+        </select>
+    </form>
+
+    <div class="ksv-table-card">
+        <table class="ksv-data-table">
+            <thead>
+            <tr>
+                <th style="width: 110px;">Mã số</th>
+                <th>Khách hàng đại diện</th>
+                <th style="width: 120px;">Số phòng</th>
+                <th>Lễ tân tiếp đón</th>
+                <th>Thời điểm nhận phòng</th>
+                <th>Thời điểm trả phòng</th>
+                <th>Tình trạng hồ sơ</th>
+                <th style="width: 140px; text-align: center;">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="luuTru : ${dsLuuTru}">
+                <td><span class="ksv-lt-id" th:text="${'#LT-' + luuTru.maLuuTru}"></span></td>
+                <td><span class="ksv-customer-name" th:text="${luuTru.khachHang != null ? luuTru.khachHang.hoTen : 'Khách vãng lai'}"></span></td>
+                <td><span class="ksv-room-badge" th:text="${luuTru.phong != null ? luuTru.phong.soPhong : '───'}"></span></td>
+                <td th:text="${luuTru.nhanVien != null ? luuTru.nhanVien.hoTen : 'Hệ thống tự động'}"></td>
+                <td th:text="${luuTru.gioNhanPhong != null ? #temporals.format(luuTru.gioNhanPhong,'dd/MM/yyyy HH:mm') : '───'}"></td>
+                <td th:text="${luuTru.gioTraPhong != null ? #temporals.format(luuTru.gioTraPhong,'dd/MM/yyyy HH:mm') : '───'}"></td>
+                <td>
+                    <span class="ksv-status-pill"
+                          th:text="${luuTru.trangThai}"
+                          th:classappend="${luuTru.trangThai == 'Đang lưu trú' ? 'ksv-status-active' : 'ksv-status-completed'}">
+                    </span>
+                </td>
+                <td style="text-align: center;">
+                    <form th:if="${luuTru.trangThai == 'Đang lưu trú'}"
+                          th:action="@{/luu-tru/admin/tra-phong/{id}(id=${luuTru.maLuuTru})}" method="post"
+                          onsubmit="return confirm('Hệ thống sẽ tiến hành làm thủ tục trả phòng và chuyển tiếp sang biểu mẫu tính tiền. Xác nhận Check-out?')">
+                        <button type="submit" class="ksv-btn-table-checkout">
+                            <i class="fa-solid fa-right-from-bracket"></i> Trả phòng
+                        </button>
+                    </form>
+                    <span th:if="${luuTru.trangThai != 'Đang lưu trú'}" style="color: var(--muted); font-size: 13px; font-weight: 600;">
+                        <i class="fa-solid fa-circle-check" style="color: #0f8a5f;"></i> Đã hoàn tất
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(dsLuuTru)}" class="ksv-empty-box">
+            <i class="fa-solid fa-folder-open" style="font-size: 32px; color: var(--border); display: block; margin-bottom: 12px;"></i>
+            Hệ thống dữ liệu biên bản lưu trú buồng phòng hiện tại trống.
+        </div>
+
+        <div th:if="${pageData.totalPages > 1}" class="ksv-pagination-bar">
+            <div class="ksv-pagination-info" th:text="${'Hiển thị trang ' + pageData.currentPage + ' / ' + pageData.totalPages + ' (Tổng số ' + pageData.totalElements + ' hồ sơ)'}">
+                Hiển thị dữ liệu thực tế hệ thống PMS
+            </div>
+            <div class="ksv-pagination-controls">
+                <a th:href="@{/luu-tru/admin(page=${pageData.currentPage - 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasPrevious} ? 'disabled' : ''"
+                   th:style="${!pageData.hasPrevious} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
+
+                <span th:each="i : ${#numbers.sequence(1, pageData.totalPages)}">
+                    <a th:href="@{/luu-tru/admin(page=${i}, keyword=${keyword}, sortBy=${sortBy})}"
+                       th:text="${i}"
+                       class="ksv-page-btn"
+                       th:classappend="${i == pageData.currentPage} ? 'active' : ''">
+                    </a>
+                </span>
+
+                <a th:href="@{/luu-tru/admin(page=${pageData.currentPage + 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasNext} ? 'disabled' : ''"
+                   th:style="${!pageData.hasNext} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

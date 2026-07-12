@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title>Quản lý hóa đơn</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-page-header">
+        <div class="ksv-page-title">
+            <h1>Quản lý hóa đơn</h1>
+            <p>Theo dõi hồ sơ thu chi doanh thu phòng, hóa đơn dịch vụ phát sinh và xuất lập báo cáo tài chính chứng
+                từ.</p>
+        </div>
+        <a class="ksv-btn-excel" th:href="@{/hoa-don/admin/export-excel}">
+            <i class="fa-solid fa-file-excel"></i> Xuất dữ liệu Excel
+        </a>
+    </div>
+
+    <div th:if="${success}" class="ksv-alert ksv-alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span th:text="${success}"></span>
+    </div>
+    <div th:if="${error}" class="ksv-alert ksv-alert-error">
+        <i class="fa-solid fa-circle-xmark"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:action="@{/hoa-don/admin}" method="get" class="ksv-filter-card" id="filterForm">
+        <div class="ksv-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="keyword" th:value="${keyword}" class="ksv-search-input"
+                   placeholder="Tìm kiếm nhanh tên khách hàng, mã hóa đơn, phương thức...">
+        </div>
+
+        <select class="ksv-filter-select" name="sortBy" onchange="document.getElementById('filterForm').submit()"
+                aria-label="Sắp xếp hóa đơn">
+            <option value="" th:selected="${sortBy == null || sortBy == ''}">Sắp xếp mặc định</option>
+            <option value="az" th:selected="${sortBy == 'az'}">Tên khách hàng: A đến Z</option>
+            <option value="za" th:selected="${sortBy == 'za'}">Tên khách hàng: Z đến A</option>
+            <option value="id-asc" th:selected="${sortBy == 'id-asc'}">Mã hóa đơn: Tăng dần</option>
+            <option value="id-desc" th:selected="${sortBy == 'id-desc'}">Mã hóa đơn: Giảm dần</option>
+        </select>
+    </form>
+
+    <div class="ksv-table-card">
+        <table class="ksv-data-table">
+            <thead>
+            <tr>
+                <th style="width: 100px;">Mã số HĐ</th>
+                <th>Khách hàng chứng từ</th>
+                <th>Hồ sơ nguồn gốc</th>
+                <th>Ngày cập nhật</th>
+                <th>Tổng thu thực tế</th>
+                <th>Phương thức</th>
+                <th>Trạng thái</th>
+                <th style="width: 120px; text-align: center;">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="hd : ${dsHoaDon}">
+                <td><span class="ksv-invoice-id" th:text="${'#HĐ-' + hd.maHD}"></span></td>
+                <td>
+                    <span class="ksv-cust-name"
+                          th:text="${hd.phieuDatPhong != null and hd.phieuDatPhong.khachHang != null ? hd.phieuDatPhong.khachHang.hoTen : (hd.hoSoLuuTru != null and hd.hoSoLuuTru.khachHang != null ? hd.hoSoLuuTru.khachHang.hoTen : 'Khách vãng lai')}"></span>
+                </td>
+                <td>
+                    <span th:if="${hd.phieuDatPhong != null}"
+                          th:text="${'Đặt phòng #' + hd.phieuDatPhong.maDatPhong}"></span>
+                    <span th:if="${hd.hoSoLuuTru != null}" th:text="${'Lưu trú #' + hd.hoSoLuuTru.maLuuTru}"></span>
+                </td>
+                <td th:text="${hd.ngayLap != null ? #temporals.format(hd.ngayLap,'dd/MM/yyyy HH:mm') : '───'}"></td>
+                <td>
+                    <span class="ksv-total-amount"
+                          th:text="${hd.tongTien != null ? #numbers.formatDecimal(hd.tongTien,0,'COMMA',0,'POINT') + ' ₫' : '0 ₫'}"></span>
+                </td>
+                <td th:text="${hd.hinhThucThanhToan != null ? hd.hinhThucThanhToan : '───'}"></td>
+                <td>
+                    <span class="ksv-status-pill"
+                          th:text="${hd.trangThaiThanhToan}"
+                          th:classappend="${hd.trangThaiThanhToan == 'Đã thanh toán' ? 'ksv-status-paid' : 'ksv-status-unpaid'}">
+                    </span>
+                </td>
+                <td>
+                    <div class="ksv-action-btn-group" style="justify-content: center;">
+                        <a th:if="${hd.trangThaiThanhToan == 'Chưa thanh toán'}"
+                           class="ksv-action-btn ksv-action-cash"
+                           th:href="@{/hoa-don/admin/thanh-toan/{id}(id=${hd.maHD})}"
+                           title="Tiến hành quyết toán thu tiền">
+                            <i class="fa-solid fa-cash-register"></i>
+                        </a>
+                        <a th:if="${hd.trangThaiThanhToan == 'Đã thanh toán'}"
+                           class="ksv-action-btn ksv-action-print"
+                           target="_blank"
+                           th:href="@{/hoa-don/admin/in-pdf/{id}(id=${hd.maHD})}"
+                           title="In sao lưu tài liệu PDF">
+                            <i class="fa-solid fa-print"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(dsHoaDon)}" class="ksv-empty-box">
+            <i class="fa-solid fa-folder-open"
+               style="font-size: 32px; color: var(--border); display: block; margin-bottom: 12px;"></i>
+            Hệ thống dữ liệu lưu trữ hóa đơn chứng từ hiện tại đang trống.
+        </div>
+
+        <div th:if="${pageData.totalPages > 1}" class="ksv-pagination-bar">
+            <div class="ksv-pagination-info"
+                 th:text="${'Hiển thị trang ' + pageData.currentPage + ' / ' + pageData.totalPages + ' (Tổng số ' + pageData.totalElements + ' hóa đơn)'}">
+                Hiển thị dữ liệu thực tế hệ thống PMS
+            </div>
+            <div class="ksv-pagination-controls">
+                <a th:href="@{/hoa-don/admin(page=${pageData.currentPage - 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasPrevious} ? 'disabled' : ''"
+                   th:style="${!pageData.hasPrevious} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
+
+                <span th:each="i : ${#numbers.sequence(1, pageData.totalPages)}">
+                    <a th:href="@{/hoa-don/admin(page=${i}, keyword=${keyword}, sortBy=${sortBy})}"
+                       th:text="${i}"
+                       class="ksv-page-btn"
+                       th:classappend="${i == pageData.currentPage} ? 'active' : ''">
+                    </a>
+                </span>
+
+                <a th:href="@{/hoa-don/admin(page=${pageData.currentPage + 1}, keyword=${keyword}, sortBy=${sortBy})}"
+                   class="ksv-page-btn" th:classappend="${!pageData.hasNext} ? 'disabled' : ''"
+                   th:style="${!pageData.hasNext} ? 'pointer-events: none; opacity: 0.5;' : ''">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

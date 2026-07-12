@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Danh sách yêu thích — KhachSanVui</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <section class="ksv-fav-section">
+        <div class="container">
+
+            <!-- Breadcrumb -->
+            <nav class="ksv-fav-breadcrumb" aria-label="Điều hướng">
+                <a th:href="@{/}">
+                    <i class="fa-solid fa-house" aria-hidden="true"></i>
+                    Trang chủ
+                </a>
+                <span aria-hidden="true">/</span>
+                <strong>Yêu thích</strong>
+            </nav>
+
+            <!-- Page header -->
+            <div class="ksv-fav-header">
+                <div>
+                    <h1>
+                        <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                        Danh sách yêu thích
+                    </h1>
+                    <p th:if="${dsPhongYeuThich != null and !#lists.isEmpty(dsPhongYeuThich)}"
+                       th:text="${#lists.size(dsPhongYeuThich)} + ' phòng đã lưu'">
+                        5 phòng đã lưu
+                    </p>
+                </div>
+            </div>
+
+            <!-- ── Empty state ── -->
+            <div class="ksv-fav-empty"
+                 id="empty-favorites"
+                 th:if="${dsPhongYeuThich == null or #lists.isEmpty(dsPhongYeuThich)}">
+                <div class="ksv-fav-empty-icon">
+                    <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                </div>
+                <h2>Chưa có phòng yêu thích</h2>
+                <p>Bấm vào icon ♡ trên mỗi phòng để lưu lại và xem lại sau.</p>
+                <a th:href="@{/phong}" class="ksv-fav-btn-primary">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    Khám phá phòng ngay
+                </a>
+            </div>
+
+            <!-- ── Room list ── -->
+            <div class="ksv-fav-list"
+                 th:if="${dsPhongYeuThich != null and !#lists.isEmpty(dsPhongYeuThich)}">
+
+                <article th:each="p : ${dsPhongYeuThich}"
+                         class="ksv-fav-card"
+                         th:id="'fav-card-' + ${p.maPhong}">
+
+                    <!-- Image -->
+                    <div class="ksv-fav-img-wrap">
+                        <a th:href="@{/phong/chi-tiet/{id}(id=${p.maPhong})}"
+                           class="ksv-fav-img-link"
+                           th:aria-label="${'Xem chi tiết ' + p.tenLoaiPhong + ' - ' + p.soPhong}">
+                            <img th:src="@{'/images/rooms/' + ${p.hinhAnhHienThi}}"
+                                 th:alt="${p.soPhong}"
+                                 class="ksv-fav-img">
+                        </a>
+
+                        <!-- Status badge -->
+                        <span class="ksv-fav-status-badge"
+                              th:text="${p.trangThai}"
+                              th:classappend="${p.trangThai == 'Trống'} ? 'badge-available' : 'badge-busy'">
+                            Trống
+                        </span>
+
+                        <!-- Heart button -->
+                        <button type="button"
+                                class="ksv-fav-heart js-favorite-toggle is-favorite"
+                                th:data-room-id="${p.maPhong}"
+                                aria-label="Bỏ yêu thích">
+                            <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="ksv-fav-body">
+
+                        <!-- Left: info -->
+                        <div class="ksv-fav-info">
+                            <a th:href="@{/phong/chi-tiet/{id}(id=${p.maPhong})}"
+                               class="ksv-fav-room-name"
+                               th:text="${p.tenLoaiPhong + ' — ' + p.soPhong}">
+                                Phòng Deluxe — 101
+                            </a>
+
+                            <div class="ksv-fav-location">
+                                <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                                <span th:text="${p.chiNhanh != null and p.chiNhanh.tenChiNhanh != null ? p.chiNhanh.tenChiNhanh : 'KhachSanVui'}">
+                                    KhachSanVui
+                                </span>
+                            </div>
+
+                            <p class="ksv-fav-desc" th:text="${p.moTa}">Mô tả phòng</p>
+
+                            <!-- Amenities chips -->
+                            <div class="ksv-fav-chips">
+                                <span class="ksv-fav-chip">
+                                    <i class="fa-solid fa-user-group" aria-hidden="true"></i>
+                                    <span th:text="${p.sucChua + ' khách'}">2 khách</span>
+                                </span>
+                                <span class="ksv-fav-chip">
+                                    <i class="fa-solid fa-ruler-combined" aria-hidden="true"></i>
+                                    <span th:text="${p.dienTich != null ? p.dienTich + ' m²' : 'Tiện nghi'}">22 m²</span>
+                                </span>
+                                <span class="ksv-fav-chip">
+                                    <i class="fa-solid fa-wifi" aria-hidden="true"></i>
+                                    <span th:text="${p.tienNghi != null and !p.tienNghi.isBlank() ? p.tienNghi : 'Wi-Fi'}">
+                                        Wi-Fi
+                                    </span>
+                                </span>
+                            </div>
+
+                            <!-- Free cancel note -->
+                            <span class="ksv-fav-free-cancel">
+                                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                                Hủy miễn phí trước 24h
+                            </span>
+                        </div>
+
+                        <!-- Right: price + CTA -->
+                        <div class="ksv-fav-side">
+
+                            <div class="ksv-fav-rating">
+                                <div>
+                                    <strong>Tuyệt hảo</strong>
+                                    <span>98 đánh giá</span>
+                                </div>
+                                <b>9.2</b>
+                            </div>
+
+                            <div class="ksv-fav-price-block">
+                                <span class="ksv-fav-old-price"
+                                      th:text="${'VNĐ ' + #numbers.formatDecimal(p.giaPhong * 1.2, 0, 'COMMA', 0, 'POINT')}">
+                                    VNĐ 400.000
+                                </span>
+                                <strong class="ksv-fav-price"
+                                        th:text="${'VNĐ ' + #numbers.formatDecimal(p.giaPhong, 0, 'COMMA', 0, 'POINT')}">
+                                    VNĐ 320.000
+                                </strong>
+                                <span class="ksv-fav-tax-note">Đã bao gồm thuế và phí</span>
+                            </div>
+
+                            <a th:href="@{/phong/{id}(id=${p.maPhong})}"
+                               class="ksv-fav-btn-book">
+                                Xem chi tiết
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </a>
+
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+</section>
+
+<th:block layout:fragment="additional-scripts">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('favorite:changed', function (e) {
+                if (!e || !e.detail || e.detail.favorited) return;
+
+                const roomId = e.detail.roomId;
+                const card = document.getElementById('fav-card-' + roomId);
+                if (!card) return;
+
+                // Fade out rồi remove
+                card.style.transition = 'opacity .3s, transform .3s';
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(16px)';
+
+                setTimeout(function () {
+                    card.remove();
+
+                    // Hiện empty state nếu hết phòng
+                    const remaining = document.querySelectorAll('.ksv-fav-card');
+                    if (remaining.length === 0) {
+                        const empty = document.getElementById('empty-favorites');
+                        if (empty) empty.style.display = '';
+
+                        const list = document.querySelector('.ksv-fav-list');
+                        if (list) list.style.display = 'none';
+
+                        const header = document.querySelector('.ksv-fav-header p');
+                        if (header) header.textContent = '0 phòng đã lưu';
+                    } else {
+                        const header = document.querySelector('.ksv-fav-header p');
+                        if (header) header.textContent = remaining.length + ' phòng đã lưu';
+                    }
+                }, 300);
+            });
+        });
+    </script>
+</th:block>
+
+</body>
+</html>

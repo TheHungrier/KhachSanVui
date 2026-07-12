@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin}">
+<head>
+    <title th:text="${formTitle}">Biểu mẫu khách hàng</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="ksv-form-container">
+        <div class="ksv-form-header">
+            <div class="ksv-form-header-title">
+                <h1 th:text="${formTitle}">Biểu mẫu khách hàng</h1>
+                <p>Nhập hồ sơ thông tin cá nhân khách hàng để thuận tiện điều phối đặt phòng và làm thủ tục nhận
+                    phòng.</p>
+            </div>
+            <a class="ksv-btn-back" th:href="@{/khach-hang/admin}">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+            </a>
+        </div>
+
+        <form th:action="@{/khach-hang/admin/luu}" th:object="${khachHang}" method="post" enctype="multipart/form-data">
+            <div th:if="${error}" class="ksv-alert">
+                <i class="fa-solid fa-circle-xmark"></i>
+                <span th:text="${error}"></span>
+            </div>
+
+            <input type="hidden" th:field="*{maKH}">
+            <input type="hidden" th:field="*{hinhAnh}">
+
+            <div class="ksv-form-grid">
+                <div class="ksv-form-group">
+                    <label>Họ và tên khách hàng</label>
+                    <input class="ksv-form-input" th:field="*{hoTen}" placeholder="Nhập đầy đủ họ và tên..." required
+                           maxlength="100">
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Giới tính</label>
+                    <select class="ksv-form-select" th:field="*{gioiTinh}" required>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Số điện thoại liên hệ</label>
+                    <input class="ksv-form-input" th:field="*{soDienThoai}" placeholder="Nhập số điện thoại..." required
+                           maxlength="15">
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Thư điện tử (Email)</label>
+                    <input class="ksv-form-input" th:field="*{email}" type="email"
+                           placeholder="Ví dụ: khachhang@gmail.com" maxlength="100">
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Số CCCD / Hộ chiếu</label>
+                    <input class="ksv-form-input" th:field="*{cccd}" placeholder="Nhập số căn cước công dân..."
+                           maxlength="20">
+                </div>
+
+                <div class="ksv-form-group">
+                    <label>Ngày sinh</label>
+                    <input class="ksv-form-input" th:field="*{ngaySinh}" type="date">
+                </div>
+
+                <div class="ksv-form-group full-width">
+                    <label>Tải ảnh hồ sơ cá nhân</label>
+                    <input type="file" name="fileAnh" id="ksvCustFile" accept="image/*" class="ksv-form-file">
+                </div>
+
+                <div class="ksv-form-group full-width">
+                    <label>Địa chỉ cư trú</label>
+                    <input class="ksv-form-input" th:field="*{diaChi}"
+                           placeholder="Nhập số nhà, tên đường, tỉnh/thành phố..." maxlength="200">
+                </div>
+            </div>
+
+            <div class="ksv-form-actions">
+                <button class="ksv-btn-save" type="submit">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu thông tin khách hàng
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>

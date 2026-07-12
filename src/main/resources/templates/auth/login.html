@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - KhachSanVui</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<section class="ksv-auth-page">
+
+    <header class="ksv-auth-header">
+        <div class="ksv-auth-header-inner">
+            <a th:href="@{/}" class="ksv-auth-logo">
+                <img th:src="@{/images/about/logo-header.png}" alt="KhachSanVui">
+            </a>
+
+            <div class="ksv-auth-header-actions">
+                <button type="button" class="ksv-auth-circle-btn" aria-label="Ngôn ngữ">
+                    <img src="https://flagcdn.com/w40/vn.png" alt="Việt Nam">
+                </button>
+
+                <a th:href="@{/lien-he}" class="ksv-auth-circle-btn" aria-label="Trợ giúp">
+                    <i class="fa-solid fa-question"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="ksv-auth-main">
+        <form class="ksv-auth-card" th:action="@{/login}" method="post">
+
+            <input type="hidden"
+                   th:if="${_csrf != null}"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}">
+
+            <h1>Đăng nhập hoặc tạo tài khoản</h1>
+
+            <p>
+                Bạn có thể đăng nhập tài khoản KhachSanVui của mình để xem lịch sử đặt phòng,
+                quản lý chuyến đi hoặc truy cập trang quản trị.
+            </p>
+
+            <div class="ksv-auth-alert error" th:if="${param.error}">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>Tên đăng nhập hoặc mật khẩu không đúng.</span>
+            </div>
+
+            <div class="ksv-auth-alert success" th:if="${param.logout}">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Bạn đã đăng xuất thành công.</span>
+            </div>
+
+            <div class="ksv-auth-group">
+                <label for="tenDangNhap">Tên đăng nhập</label>
+                <input id="tenDangNhap"
+                       name="tenDangNhap"
+                       type="text"
+                       required
+                       autofocus
+                       placeholder="Nhập tên đăng nhập">
+            </div>
+
+            <div class="ksv-auth-group">
+                <label for="matKhau">Mật khẩu</label>
+                <input id="matKhau"
+                       name="matKhau"
+                       type="password"
+                       required
+                       placeholder="Nhập mật khẩu">
+            </div>
+
+            <button type="submit" class="ksv-auth-submit">
+                Tiếp tục
+            </button>
+
+            <div class="ksv-auth-divider">
+                <span></span>
+                <p>hoặc sử dụng một trong các lựa chọn này</p>
+                <span></span>
+            </div>
+
+            <div class="ksv-auth-socials">
+                <a th:href="@{/oauth2/authorization/google}" class="ksv-auth-social-btn google">
+                    <i class="fa-brands fa-google"></i>
+                </a>
+                <a th:href="@{/oauth2/authorization/facebook}" class="ksv-auth-social-btn facebook">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+            </div>
+
+            <div class="ksv-auth-extra">
+                <span>Chưa có tài khoản?</span>
+                <a th:href="@{/register}">Đăng ký</a>
+            </div>
+
+            <div class="ksv-auth-forgot">
+                <span>Bạn quên mật khẩu?</span>
+                <a href="#">Khôi phục tài khoản của bạn</a>
+            </div>
+
+            <div class="ksv-auth-policy">
+                <p>
+                    Qua việc đăng nhập hoặc tạo tài khoản, bạn đồng ý với
+                    <a href="#">Điều khoản</a>,
+                    <a href="#">Điều kiện</a> và
+                    <a href="#">Chính sách bảo mật</a> của KhachSanVui.
+                </p>
+            </div>
+
+            <div class="ksv-auth-copy">
+                <p>Bảo lưu mọi quyền.</p>
+                <p>Bản quyền © 2026 - KhachSanVui™</p>
+            </div>
+
+        </form>
+    </main>
+
+</section>
+
+</body>
+</html>

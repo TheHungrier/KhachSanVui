@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Thanh toán</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    <section class="ksv-payment-page">
+        <div class="container">
+
+            <div class="ksv-payment-stepper">
+                <div class="ksv-payment-step done">
+                    <span><i class="fa-solid fa-check"></i></span>
+                    <strong>Bạn chọn</strong>
+                </div>
+
+                <div class="ksv-payment-line"></div>
+
+                <div class="ksv-payment-step done">
+                    <span><i class="fa-solid fa-check"></i></span>
+                    <strong>Chi tiết về bạn</strong>
+                </div>
+
+                <div class="ksv-payment-line"></div>
+
+                <div class="ksv-payment-step active">
+                    <span>3</span>
+                    <strong>Hoàn tất đặt phòng</strong>
+                </div>
+            </div>
+
+            <div class="ksv-payment-layout">
+
+                <main class="ksv-payment-main">
+
+                    <section class="ksv-payment-card">
+                        <div class="ksv-payment-card-head">
+                            <div>
+                                <span class="ksv-payment-kicker">
+                                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                                    Hóa đơn thanh toán
+                                </span>
+                                <h1 th:text="'Thanh toán hóa đơn #' + ${hoaDon.maHD}">
+                                    Thanh toán hóa đơn #1
+                                </h1>
+                                <p>Vui lòng kiểm tra thông tin hóa đơn trước khi chọn phương thức thanh toán.</p>
+                            </div>
+
+                            <span class="ksv-payment-status"
+                                  th:classappend="${hoaDon.trangThaiThanhToan == 'Đã thanh toán'} ? ' paid' : ' waiting'"
+                                  th:text="${hoaDon.trangThaiThanhToan}">
+                                Chưa thanh toán
+                            </span>
+                        </div>
+
+                        <div class="ksv-payment-notice"
+                             th:if="${hoaDon.trangThaiThanhToan != 'Đã thanh toán'}">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <div>
+                                <strong>Bạn còn một bước nữa để hoàn tất đặt phòng.</strong>
+                                <span>Hãy chọn VNPay để thanh toán online hoặc chọn thanh toán tại khách sạn nếu muốn trả tiền khi nhận phòng.</span>
+                            </div>
+                        </div>
+
+                        <div class="ksv-payment-success"
+                             th:if="${hoaDon.trangThaiThanhToan == 'Đã thanh toán'}">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div>
+                                <strong>Thanh toán thành công.</strong>
+                                <span>Cảm ơn bạn đã sử dụng KhachSanVui. Thông tin thanh toán đã được ghi nhận trong hệ thống.</span>
+                            </div>
+                        </div>
+
+                        <div class="ksv-payment-info-grid">
+                            <div class="ksv-payment-info-box">
+                                <i class="fa-solid fa-receipt"></i>
+                                <span>Mã hóa đơn</span>
+                                <strong th:text="${hoaDon.maHD}">1</strong>
+                            </div>
+
+                            <div class="ksv-payment-info-box">
+                                <i class="fa-solid fa-money-bill-wave"></i>
+                                <span>Tổng tiền</span>
+                                <strong th:text="${#numbers.formatDecimal(hoaDon.tongTien,0,'POINT',0,'COMMA') + '₫'}">
+                                    600.000₫
+                                </strong>
+                            </div>
+
+                            <div class="ksv-payment-info-box">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <span>Bảo mật</span>
+                                <strong>An toàn</strong>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="ksv-payment-card"
+                             th:if="${hoaDon.trangThaiThanhToan != 'Đã thanh toán'}">
+                        <div class="ksv-payment-card-head compact">
+                            <div>
+                                <h2>Phương thức thanh toán</h2>
+                                <p>Chọn cách thanh toán phù hợp để hoàn tất đặt phòng.</p>
+                            </div>
+                        </div>
+
+                        <div class="ksv-payment-choice-box">
+
+                            <input type="radio"
+                                   id="payVnpay"
+                                   name="paymentChoice"
+                                   class="ksv-payment-choice-input"
+                                   checked>
+
+                            <input type="radio"
+                                   id="payHotel"
+                                   name="paymentChoice"
+                                   class="ksv-payment-choice-input">
+
+                            <div class="ksv-payment-choice-list">
+                                <label for="payVnpay" class="ksv-payment-choice-card">
+                                    <span class="ksv-payment-radio-dot"></span>
+
+                                    <span class="ksv-payment-choice-icon">
+                                        <i class="fa-solid fa-qrcode"></i>
+                                    </span>
+
+                                    <span class="ksv-payment-choice-text">
+                                        <strong>Thanh toán online qua VNPay</strong>
+                                        <small>Quét mã QR hoặc chuyển sang cổng VNPay để thanh toán an toàn.</small>
+                                    </span>
+                                </label>
+
+                                <label for="payHotel" class="ksv-payment-choice-card">
+                                    <span class="ksv-payment-radio-dot"></span>
+
+                                    <span class="ksv-payment-choice-icon hotel">
+                                        <i class="fa-solid fa-building-columns"></i>
+                                    </span>
+
+                                    <span class="ksv-payment-choice-text">
+                                        <strong>Thanh toán tại khách sạn</strong>
+                                        <small>Giữ phòng trước, thanh toán bằng tiền mặt khi nhận phòng hoặc trả phòng.</small>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div class="ksv-payment-panel ksv-payment-vnpay-panel">
+                                <div class="ksv-payment-qr-layout">
+                                    <div class="ksv-payment-qr-box">
+                                        <div id="vnpay-qrcode"
+                                             style="padding: 10px; background: white; border-radius: 8px;"></div>
+
+                                        <small class="text-muted mt-2 d-block"
+                                               style="font-size: 11px; color: #666;"
+                                               th:text="${vnpTxnRef != null ? 'vnp_TxnRef: ' + vnpTxnRef : ''}"></small>
+                                    </div>
+
+                                    <div class="ksv-payment-qr-content">
+                                        <h3>Thanh toán nhanh bằng VNPay</h3>
+                                        <p>Kiểm tra lại số tiền, sau đó bấm nút bên dưới để chuyển sang cổng thanh toán
+                                            VNPay.</p>
+
+                                        <div class="ksv-payment-qr-amount">
+                                            <span>Số tiền cần thanh toán</span>
+                                            <strong th:text="${#numbers.formatDecimal(hoaDon.tongTien,0,'POINT',0,'COMMA') + '₫'}">
+                                                600.000₫
+                                            </strong>
+                                        </div>
+
+                                        <form th:action="@{/thanh-toan/{id}/vnpay(id=${hoaDon.maHD})}" method="post">
+                                            <button type="submit" class="ksv-payment-submit-online">
+                                                Chuyển sang cổng VNPay
+                                                <i class="fa-solid fa-lock"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ksv-payment-panel ksv-payment-hotel-panel">
+                                <div class="ksv-payment-hotel-box">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <div>
+                                        <h3>Thanh toán tại khách sạn</h3>
+                                        <p>Bạn sẽ giữ phòng trước và thanh toán trực tiếp khi nhận phòng hoặc trả phòng
+                                            theo quy định của khách sạn.</p>
+
+                                        <form th:action="@{/thanh-toan/{id}/tien-mat(id=${hoaDon.maHD})}" method="post">
+                                            <button type="submit" class="ksv-payment-submit-hotel">
+                                                Xác nhận thanh toán tại khách sạn
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section class="ksv-payment-card">
+                        <div class="ksv-payment-card-head compact">
+                            <div>
+                                <h2>Lịch sử giao dịch</h2>
+                                <p>Theo dõi các lần thanh toán đã được ghi nhận cho hóa đơn này.</p>
+                            </div>
+                        </div>
+
+                        <div th:if="${!#lists.isEmpty(thanhToans)}" class="ksv-payment-table-wrap">
+                            <table class="ksv-payment-table">
+                                <thead>
+                                <tr>
+                                    <th>Mã giao dịch</th>
+                                    <th>Phương thức</th>
+                                    <th>Số tiền</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="tt : ${thanhToans}">
+                                    <td th:text="${tt.maGiaoDich}">GD001</td>
+                                    <td th:text="${tt.phuongThuc}">VNPay</td>
+                                    <td th:text="${#numbers.formatDecimal(tt.soTien,0,'POINT',0,'COMMA') + '₫'}">
+                                        600.000₫
+                                    </td>
+                                    <td>
+                                        <span class="ksv-payment-table-status"
+                                              th:text="${tt.trangThai}">
+                                            Thành công
+                                        </span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div th:if="${#lists.isEmpty(thanhToans)}" class="ksv-payment-empty">
+                            <i class="fa-regular fa-clock"></i>
+                            <span>Chưa có giao dịch nào được ghi nhận.</span>
+                        </div>
+                    </section>
+
+                </main>
+
+                <aside class="ksv-payment-summary-card">
+
+                    <div class="ksv-payment-summary-head">
+                        <span>Thanh toán an toàn</span>
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+
+                    <div class="ksv-payment-summary-amount">
+                        <span>Tổng tiền cần thanh toán</span>
+                        <strong th:text="${#numbers.formatDecimal(hoaDon.tongTien,0,'POINT',0,'COMMA') + '₫'}">
+                            600.000₫
+                        </strong>
+                    </div>
+
+                    <div class="ksv-payment-summary-lines">
+                        <div>
+                            <span>Mã hóa đơn</span>
+                            <strong th:text="${hoaDon.maHD}">1</strong>
+                        </div>
+
+                        <div>
+                            <span>Trạng thái</span>
+                            <strong th:text="${hoaDon.trangThaiThanhToan}">Chưa thanh toán</strong>
+                        </div>
+
+                        <div>
+                            <span>Phí xử lý</span>
+                            <strong>0₫</strong>
+                        </div>
+                    </div>
+
+                    <div class="ksv-payment-trust-box">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <div>
+                            <strong>Giao dịch được bảo vệ</strong>
+                            <span>KhachSanVui không lưu thông tin thẻ thanh toán của bạn.</span>
+                        </div>
+                    </div>
+
+                    <div class="ksv-payment-summary-actions"
+                         th:if="${hoaDon.trangThaiThanhToan != 'Đã thanh toán'}">
+                        <div class="ksv-payment-summary-reminder">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>Vui lòng chọn phương thức thanh toán ở khung bên trái để hoàn tất đặt phòng.</span>
+                        </div>
+                    </div>
+
+                    <div class="ksv-payment-summary-actions"
+                         th:if="${hoaDon.trangThaiThanhToan == 'Đã thanh toán'}">
+                        <a th:href="@{/}" class="ksv-payment-primary-btn">
+                            Về trang chủ
+                            <i class="fa-solid fa-house"></i>
+                        </a>
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </div>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const paymentUrl = /*[[${paymentUrl}]]*/ '';
+
+            if (paymentUrl) {
+                new QRCode(document.getElementById("vnpay-qrcode"), {
+                    text: paymentUrl,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            } else {
+                document.getElementById("vnpay-qrcode").innerHTML =
+                    "<p style='color:red; font-size:13px;'>Không thể khởi tạo mã QR vào lúc này.</p>";
+            }
+        });
+    </script>
+</section>
+</body>
+</html>

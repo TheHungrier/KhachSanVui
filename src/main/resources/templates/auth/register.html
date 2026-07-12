@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - KhachSanVui</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<section class="ksv-auth-page">
+
+    <header class="ksv-auth-header">
+        <div class="ksv-auth-header-inner">
+            <a th:href="@{/}" class="ksv-auth-logo">
+                <img th:src="@{/images/about/logo-header.png}" alt="KhachSanVui">
+            </a>
+
+            <div class="ksv-auth-header-actions">
+                <button type="button" class="ksv-auth-circle-btn" aria-label="Ngôn ngữ">
+                    <img src="https://flagcdn.com/w40/vn.png" alt="Việt Nam">
+                </button>
+
+                <a th:href="@{/lien-he}" class="ksv-auth-circle-btn" aria-label="Trợ giúp">
+                    <i class="fa-solid fa-question"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="ksv-auth-main ksv-auth-main-register">
+        <form class="ksv-auth-card ksv-auth-register-card"
+              th:action="@{/register}"
+              th:object="${dto}"
+              method="post">
+
+            <input type="hidden"
+                   th:if="${_csrf != null}"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}">
+
+            <div class="ksv-auth-alert error" th:if="${error}">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span th:text="${error}"></span>
+            </div>
+            <div class="ksv-auth-alert success" th:if="${success}">
+                <i class="fa-solid fa-circle-check"></i>
+                <span th:text="${success}"></span>
+            </div>
+
+            <div class="ksv-auth-register-head">
+                <h1>Tạo tài khoản KhachSanVui</h1>
+                <p>
+                    Đăng ký tài khoản để đặt phòng nhanh hơn, theo dõi lịch sử đặt phòng
+                    và quản lý thông tin cá nhân của bạn.
+                </p>
+            </div>
+
+            <div class="ksv-auth-register-grid">
+
+                <div class="ksv-auth-group">
+                    <label>Họ tên <span>*</span></label>
+                    <input th:field="*{hoTen}"
+                           required
+                           placeholder="Ví dụ: Nguyễn Văn An">
+                </div>
+
+                <div class="ksv-auth-group">
+                    <label>Giới tính</label>
+                    <select th:field="*{gioiTinh}">
+                        <option value="">Chọn giới tính</option>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                </div>
+
+                <div class="ksv-auth-group">
+                    <label>Số điện thoại <span>*</span></label>
+                    <input th:field="*{soDienThoai}"
+                           required
+                           placeholder="Ví dụ: 0901234567">
+                </div>
+
+                <div class="ksv-auth-group">
+                    <label>Email</label>
+                    <input th:field="*{email}"
+                           type="email"
+                           placeholder="email@example.com">
+                </div>
+
+                <div class="ksv-auth-group">
+                    <label>CCCD</label>
+                    <input th:field="*{cccd}"
+                           placeholder="Nhập CCCD nếu cần">
+                </div>
+
+                <div class="ksv-auth-group">
+                    <label>Địa chỉ</label>
+                    <input th:field="*{diaChi}"
+                           placeholder="Nhập địa chỉ liên hệ">
+                </div>
+
+                <div class="ksv-auth-group">
+                    <label>Tên đăng nhập <span>*</span></label>
+                    <input th:field="*{tenDangNhap}"
+                           required
+                           placeholder="Ví dụ: khachhang01">
+                </div>
+
+                <div class="ksv-auth-group">
+                    <label>Mật khẩu <span>*</span></label>
+                    <input th:field="*{matKhau}"
+                           type="password"
+                           required
+                           placeholder="Nhập mật khẩu">
+                </div>
+
+                <div class="ksv-auth-group full">
+                    <label>Xác nhận mật khẩu <span>*</span></label>
+                    <input th:field="*{xacNhanMatKhau}"
+                           type="password"
+                           required
+                           placeholder="Nhập lại mật khẩu">
+                </div>
+
+            </div>
+
+            <button type="submit" class="ksv-auth-submit">
+                Tạo tài khoản
+            </button>
+
+            <div class="ksv-auth-extra">
+                <span>Đã có tài khoản?</span>
+                <a th:href="@{/login}">Đăng nhập</a>
+            </div>
+
+            <div class="ksv-auth-policy">
+                <p>
+                    Qua việc tạo tài khoản, bạn đồng ý với
+                    <a href="#">Điều khoản</a>,
+                    <a href="#">Điều kiện</a> và
+                    <a href="#">Chính sách bảo mật</a> của KhachSanVui.
+                </p>
+            </div>
+
+            <div class="ksv-auth-copy">
+                <p>Bảo lưu mọi quyền.</p>
+                <p>Bản quyền © 2026 - KhachSanVui™</p>
+            </div>
+
+        </form>
+    </main>
+
+</section>
+
+</body>
+</html>
