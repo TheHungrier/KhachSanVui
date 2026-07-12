@@ -1,29 +1,41 @@
 # KhachSanVui
 
-## Secure local configuration
+KhachSanVui là hệ thống quản lý và đặt phòng khách sạn, phục vụ cả khách hàng và bộ phận vận hành.
 
-- Copy `src/main/resources/application-example.properties` to your local, untracked override file (for example: `src/main/resources/application-local.properties`) and fill values from environment variables.
-- `src/main/resources/application.properties` now uses environment placeholders for sensitive settings.
-- Do **not** commit real credentials or API keys.
+## Chức năng chính
 
-### Required environment variables
+### 1) Khách hàng
+- Đăng ký, đăng nhập, đăng xuất tài khoản.
+- Đăng nhập mạng xã hội (Google, Facebook).
+- Xem danh sách phòng, loại phòng, thông tin chi nhánh.
+- Tìm kiếm và đặt phòng theo nhu cầu.
+- Lưu phòng yêu thích.
+- Đánh giá dịch vụ/phòng sau khi sử dụng.
+- Quản lý hồ sơ cá nhân.
 
-- `DB_USERNAME`
-- `DB_PASSWORD`
-- `MAIL_USERNAME`
-- `MAIL_PASSWORD`
-- `VNPAY_TMN_CODE`
-- `VNPAY_HASH_SECRET`
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
-- `FACEBOOK_CLIENT_ID`
-- `FACEBOOK_CLIENT_SECRET`
+### 2) Đặt phòng & dịch vụ
+- Tạo phiếu đặt phòng.
+- Quản lý chi tiết đặt phòng theo từng phòng cụ thể.
+- Ghi nhận sử dụng dịch vụ đi kèm trong thời gian lưu trú.
+- Quản lý hồ sơ lưu trú khách.
 
-Optional variables with safe defaults:
-- `DB_URL`
-- `MAIL_HOST`
-- `MAIL_PORT`
-- `VNPAY_PAY_URL`
-- `VNPAY_RETURN_URL`
+### 3) Thanh toán & hóa đơn
+- Thanh toán đơn đặt phòng.
+- Tích hợp cổng thanh toán VNPay.
+- Quản lý hóa đơn cho đơn đặt phòng và dịch vụ phát sinh.
+- Theo dõi trạng thái thanh toán.
 
-If any of these credentials were previously committed, rotate/revoke them immediately.
+### 4) Khuyến mãi & chăm sóc khách hàng
+- Quản lý chương trình khuyến mãi.
+- Áp dụng khuyến mãi trong quy trình đặt phòng.
+- Quản lý đăng ký nhận bản tin (newsletter).
+
+### 5) Vận hành nội bộ
+- Quản lý phòng, loại phòng, dịch vụ, chi nhánh.
+- Quản lý khách hàng, nhân viên, tài khoản.
+- Quản lý phân quyền đăng nhập theo tài khoản hệ thống.
+
+### 6) Quản trị
+- Trang quản trị tổng hợp.
+- Theo dõi dữ liệu kinh doanh cơ bản của hệ thống.
+- Xuất tài liệu/báo cáo phục vụ vận hành (PDF/Excel).
